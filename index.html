@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/69/69840.png">
+    <title>SvalStats</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --y: #FFD344;
+            --bg: #000000;
+            --card: rgba(28, 28, 30, 0.7);
+            --sep: rgba(255, 255, 255, 0.1);
+            --t1: #FFFFFF;
+            --t2: #A1A1A6;
+            --st: env(safe-area-inset-top);
+            --sb: env(safe-area-inset-bottom);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+        body { 
+            background-color: var(--bg); color: var(--t1); 
+            font-family: 'Outfit', sans-serif; overflow: hidden; height: 100vh;
+        }
+
+        /* --- SPLASH SCREEN --- */
+        #splash {
+            position: fixed; inset: 0; z-index: 9999; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .logo-anim {
+            width: 100px; height: 100px; border: 5px solid var(--y);
+            border-radius: 25px; display: grid; place-items: center;
+            font-weight: 900; font-size: 50px; color: var(--y);
+            box-shadow: 0 0 30px rgba(255, 211, 68, 0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* --- LAYOUT --- */
+        .app-container {
+            display: flex; flex-direction: column; height: 100vh;
+            padding-top: var(--st); padding-bottom: var(--sb);
+        }
+
+        header {
+            padding: 20px; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--sep);
+        }
+        header h1 { font-weight: 900; font-size: 26px; letter-spacing: -1px; }
+        header span { color: var(--y); }
+
+        .scroll-area { flex: 1; overflow-y: auto; padding: 20px 16px 120px; scroll-behavior: smooth; }
+
+        /* --- CARDS --- */
+        .card {
+            background: var(--card); border-radius: 24px; border: 1px solid var(--sep);
+            padding: 20px; margin-bottom: 16px; backdrop-filter: blur(10px);
+        }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .card-title { font-weight: 800; font-size: 20px; }
+        .card-sub { color: var(--t2); font-size: 13px; margin-top: 4px; }
+
+        /* --- WHEEL PICKER STYLE (Native Select Overlay) --- */
+        .input-group { display: grid; grid-template-columns: 1fr 1fr 50px; gap: 10px; margin-bottom: 12px; align-items: center; }
+        .picker-box {
+            background: rgba(255,255,255,0.05); border-radius: 14px; height: 55px;
+            position: relative; display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--sep);
+        }
+        .picker-box select {
+            position: absolute; inset: 0; opacity: 0; width: 100%; height: 100%; appearance: none;
+        }
+        .picker-label { font-size: 11px; color: var(--t2); text-transform: uppercase; margin-left: 5px; font-weight: 600; }
+        .picker-val { font-size: 18px; font-weight: 800; color: var(--y); }
+
+        .check-btn {
+            width: 50px; height: 50px; border-radius: 14px; border: 2px solid var(--sep);
+            display: grid; place-items: center; transition: all 0.3s; color: var(--t2);
+        }
+        .check-btn.done { background: var(--y); border-color: var(--y); color: #000; }
+
+        /* --- GRAPH --- */
+        .graph-container { height: 120px; margin-top: 20px; width: 100%; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border-top: 1px solid var(--sep); display: flex; justify-content: space-around;
+            padding: 10px 0 calc(var(--sb) + 5px); z-index: 1000;
+        }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+            color: var(--t2); font-size: 11px; font-weight: 600; text-decoration: none;
+        }
+        .nav-item.active { color: var(--y); }
+        .nav-item svg { width: 24px; height: 24px; }
+
+        /* --- UTILS --- */
+        .hidden { display: none; }
+        .vol-badge { background: var(--y); color: #000; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 800; }
+        
+        .finish-bar {
+            position: fixed; bottom: 90px; left: 16px; right: 16px;
+            background: var(--y); color: #000; padding: 18px; border-radius: 20px;
+            text-align: center; font-weight: 900; font-size: 17px; box-shadow: 0 10px 30px rgba(255,211,68,0.3);
+            z-index: 900; animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+<div id="splash">
+    <div class="logo-anim">S</div>
+    <h2 style="margin-top: 20px; font-weight: 800; letter-spacing: 2px;">SVALSTATS</h2>
+</div>
+
+<div class="app-container">
+    <header>
+        <h1 id="view-title">Sval<span>Stats</span></h1>
+        <div class="vol-badge" id="total-vol">Váha: 0 kg</div>
+    </header>
+
+    <main class="scroll-area" id="main-content">
+        </main>
+
+    <nav>
+        <a href="#" class="nav-item active" onclick="renderWorkout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 18h12M6 6h12M4 10v4M20 10v4M8 4v16M16 4v16"/></svg>
+            TRÉNINK
+        </a>
+        <a href="#" class="nav-item" onclick="renderProgress()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            PROGRES
+        </a>
+        <a href="spotify://" class="nav-item">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.54.659.301 1.02z"/></svg>
+            HUDBA
+        </a>
+        <a href="#" class="nav-item" onclick="renderSettings()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            NASTAVENÍ
+        </a>
+    </nav>
+</div>
+
+<script>
+    // --- DATA MANAGEMENT ---
+    let db = JSON.parse(localStorage.getItem('svalstats_db')) || {
+        currentDay: 0,
+        volume: 0,
+        plans: [
+            { name: "Nohy / Biceps", exercises: ["Preacher curl", "Hammer curl", "Leg press", "Calf raises"] },
+            { name: "Záda / Ramena", exercises: ["Lat pulldown", "Cable row", "Shoulder press", "Arnold press"] },
+            { name: "Prsa / Triceps", exercises: ["Benchpress", "Peck deck", "Incline DB press", "Triceps pushdown"] }
+        ],
+        history: {} // Format: { "Benchpress": [{date, weight, reps}] }
+    };
+
+    function save() { localStorage.setItem('svalstats_db', JSON.stringify(db)); }
+
+    // --- INITIALIZE ---
+    window.onload = () => {
+        setTimeout(() => {
+            document.getElementById('splash').style.opacity = '0';
+            setTimeout(() => document.getElementById('splash').classList.add('hidden'), 800);
+            renderWorkout();
+        }, 1500);
+    };
+
+    // --- RENDER WORKOUT ---
+    function renderWorkout() {
+        setActiveNav(0);
+        const day = db.plans[db.currentDay];
+        let html = `<h2 style="margin-bottom:20px; font-weight:400; color:var(--t2)">Dnes: <b style="color:#fff">${day.name}</b></h2>`;
+        
+        day.exercises.forEach((ex, idx) => {
+            const history = db.history[ex] || [];
+            const lastBest = history.length ? Math.max(...history.map(h => h.weight)) : 0;
+            
+            html += `
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${ex}</div>
+                            <div class="card-sub">Předchozí max: ${lastBest} kg</div>
+                        </div>
+                    </div>
+                    ${[1, 2, 3].map(s => `
+                        <div class="input-group">
+                            <div class="picker-box">
+                                <span class="picker-val" id="w-${idx}-${s}">0</span><span class="picker-label">kg</span>
+                                <select onchange="updateVal(this, 'w-${idx}-${s}')">${genOpts(0, 200, 2.5)}</select>
+                            </div>
+                            <div class="picker-box">
+                                <span class="picker-val" id="r-${idx}-${s}">0</span><span class="picker-label">op</span>
+                                <select onchange="updateVal(this, 'r-${idx}-${s}')">${genOpts(0, 30, 1)}</select>
+                            </div>
+                            <button class="check-btn" onclick="completeSet(this, '${ex}', ${idx}, ${s})">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            </button>
+                        </div>
+                    `).join('')}
+                    <div class="graph-container"><canvas id="chart-${idx}"></canvas></div>
+                </div>
+            `;
+        });
+
+        html += `<div class="finish-bar" onclick="finishWorkout()">UKONČIT TRÉNINK</div>`;
+        document.getElementById('main-content').innerHTML = html;
+        day.exercises.forEach((ex, idx) => initChart(`chart-${idx}`, ex));
+    }
+
+    // --- HELPERS ---
+    function genOpts(min, max, step) {
+        let res = '';
+        for(let i=min; i<=max; i+=step) res += `<option value="${i}">${i}</option>`;
+        return res;
+    }
+
+    function updateVal(sel, id) {
+        document.getElementById(id).innerText = sel.value;
+        if(window.navigator.vibrate) window.navigator.vibrate(10);
+    }
+
+    function completeSet(btn, ex, exIdx, setIdx) {
+        const w = parseFloat(document.getElementById(`w-${exIdx}-${setIdx}`).innerText);
+        const r = parseInt(document.getElementById(`r-${exIdx}-${setIdx}`).innerText);
+
+        if(w <= 0 || r <= 0) return;
+
+        btn.classList.add('done');
+        db.volume += (w * r);
+        document.getElementById('total-vol').innerText = `Váha: ${db.volume.toLocaleString()} kg`;
+
+        // Ghost Mode Logic
+        const history = db.history[ex] || [];
+        const isPR = history.length && w > Math.max(...history.map(h => h.weight));
+        
+        if(isPR) {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#FFD344', '#ffffff'] });
+            if(window.navigator.vibrate) window.navigator.vibrate([100, 50, 100]);
+        }
+
+        if(!db.history[ex]) db.history[ex] = [];
+        db.history[ex].push({ date: new Date().toLocaleDateString(), weight: w, reps: r });
+        save();
+    }
+
+    function initChart(id, exName) {
+        const ctx = document.getElementById(id).getContext('2d');
+        const data = (db.history[exName] || []).slice(-5);
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.map(d => d.date),
+                datasets: [{
+                    label: 'Váha',
+                    data: data.map(d => d.weight),
+                    borderColor: '#FFD344',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { 
+                    x: { display: false }, 
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#555' } }
+                }
+            }
+        });
+    }
+
+    function setActiveNav(idx) {
+        document.querySelectorAll('.nav-item').forEach((n, i) => {
+            n.classList.toggle('active', i === idx);
+        });
+    }
+
+    function finishWorkout() {
+        alert(`Trénink dokončen! Celková váha: ${db.volume} kg.`);
+        db.volume = 0;
+        db.currentDay = (db.currentDay + 1) % db.plans.length;
+        save();
+        renderProgress();
+    }
+
+    function renderProgress() {
+        setActiveNav(1);
+        let html = `<h2>Tvoje <span>Statistiky</span></h2><div style="margin-top:20px">`;
+        for(let ex in db.history) {
+            const h = db.history[ex];
+            const max = Math.max(...h.map(i => i.weight));
+            html += `
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between">
+                        <b>${ex}</b>
+                        <span style="color:var(--y)">MAX: ${max}kg</span>
+                    </div>
+                </div>
+            `;
+        }
+        document.getElementById('main-content').innerHTML = html + `</div>`;
+    }
+
+    function renderSettings() {
+        setActiveNav(3);
+        let html = `<h2>Nastavení <span>Plánu</span></h2>`;
+        db.plans.forEach((p, i) => {
+            html += `
+                <div class="card" onclick="db.currentDay = ${i}; save(); renderWorkout();">
+                    <b>${p.name}</b> ${db.currentDay === i ? ' (Aktivní)' : ''}
+                </div>
+            `;
+        });
+        document.getElementById('main-content').innerHTML = html;
+    }
+
+</script>
+</body>
+</html>
