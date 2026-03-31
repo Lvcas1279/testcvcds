@@ -28,63 +28,36 @@
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
   html, body { 
-    height: 100%; 
-    width: 100%;
-    overflow: hidden; 
-    background: var(--bg); 
-    position: fixed;
+    height: 100%; width: 100%; overflow: hidden; 
+    background: var(--bg); position: fixed;
   }
 
   body { 
-    font-family: 'DM Sans', sans-serif; 
-    color: var(--text); 
-    display: flex; 
-    flex-direction: column; 
-    max-width: 500px; 
-    margin: 0 auto; 
+    font-family: 'DM Sans', sans-serif; color: var(--text); 
+    display: flex; flex-direction: column; max-width: 500px; margin: 0 auto; 
   }
 
 /* HEADER */
 .header { 
     padding: calc(45px + env(safe-area-inset-top)) 20px 16px; 
-    background: var(--bg); 
-    display: flex; 
-    align-items: center; 
-    justify-content: space-between; 
-    flex-shrink: 0; 
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; 
 }
 .logo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--accent); }
 .header-date { font-size: 13px; color: var(--text2); text-align: right; white-space: pre-line; line-height: 1.2; }
 
-/* DAY TABS - ROZTAŽENÉ */
-.day-tabs { 
-    display: flex; 
-    padding: 0 20px 16px; 
-    gap: 10px; 
-    flex-shrink: 0; 
-}
+/* DAY TABS - FULL WIDTH */
+.day-tabs { display: flex; padding: 0 20px 16px; gap: 10px; flex-shrink: 0; }
 .day-tab { 
-    flex: 1; 
-    padding: 14px 0; 
-    border-radius: 14px; 
-    font-size: 14px; 
-    font-weight: 700; 
-    background: var(--surface2); 
-    color: var(--text2); 
-    cursor: pointer; 
-    border: 1px solid var(--border); 
-    text-align: center;
-    transition: 0.2s;
+    flex: 1; padding: 14px 0; border-radius: 14px; font-size: 14px; font-weight: 700; 
+    background: var(--surface2); color: var(--text2); cursor: pointer; 
+    border: 1px solid var(--border); text-align: center; transition: 0.2s;
 }
 .day-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
 /* SCROLL AREA */
 .scroll-area { 
-    flex: 1; 
-    overflow-y: auto; 
-    -webkit-overflow-scrolling: touch; 
-    scrollbar-width: none; 
-    padding-bottom: 150px;
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; 
+    scrollbar-width: none; padding-bottom: 120px;
 }
 .scroll-area::-webkit-scrollbar { display: none; }
 
@@ -92,20 +65,14 @@
 .view.active { display: block; }
 
 .muscle-label { 
-    font-family: 'Bebas Neue', sans-serif; 
-    font-size: 18px; 
-    letter-spacing: 2px; 
-    color: var(--text3); 
-    margin: 24px 0 12px; 
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px; 
+    letter-spacing: 2px; color: var(--text3); margin: 24px 0 12px; 
 }
 
-/* EXERCISE CARD */
+/* CARDS */
 .exercise-card { 
-    background: var(--surface); 
-    border-radius: var(--radius); 
-    border: 1px solid var(--border); 
-    margin-bottom: 12px; 
-    overflow: hidden; 
+    background: var(--surface); border-radius: var(--radius); 
+    border: 1px solid var(--border); margin-bottom: 12px; overflow: hidden; 
 }
 .exercise-card.expanded { border-color: var(--accent); }
 .exercise-header { display: flex; align-items: center; padding: 18px 20px; cursor: pointer; gap: 14px; }
@@ -115,80 +82,48 @@
 .pr-badge { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--accent); background: rgba(255, 211, 68, 0.1); padding: 4px 10px; border-radius: 100px; }
 .current-weight { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px; }
 
-/* SERIES ROW - FIXNÍ MŘÍŽKA */
+/* SERIES ROW */
 .series-row { 
-    display: grid; 
-    grid-template-columns: 40px 1fr 1fr 40px; 
-    gap: 12px; 
-    margin-bottom: 10px; 
-    align-items: center; 
+    display: grid; grid-template-columns: 40px 1fr 1fr 40px; 
+    gap: 12px; margin-bottom: 10px; align-items: center; 
 }
 .series-input { 
-    background: var(--surface2); 
-    border: 1px solid var(--border); 
-    border-radius: 12px; 
-    padding: 12px 0; 
-    color: var(--text); 
-    text-align: center; 
-    font-size: 16px; 
-    font-weight: 600;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; 
+    padding: 12px 0; color: var(--text); text-align: center; font-size: 16px; font-weight: 600;
 }
 .series-done-btn { 
-    width: 40px; 
-    height: 40px; 
-    border-radius: 12px; 
-    background: var(--surface3); 
-    border: none; 
-    color: var(--text3); 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+    width: 40px; height: 40px; border-radius: 12px; background: var(--surface3); 
+    border: none; color: var(--text3); display: flex; align-items: center; justify-content: center; 
 }
 .series-done-btn.done { background: var(--accent); color: #000; }
 
 /* BOTTOM NAV */
 .bottom-nav { 
-    position: fixed; 
-    bottom: 0; 
-    left: 0;
-    right: 0;
-    background: rgba(10, 10, 10, 0.95); 
-    backdrop-filter: blur(20px); 
-    border-top: 1px solid var(--border); 
-    display: flex; 
-    padding-top: 12px; 
-    padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
-    z-index: 1000; 
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); 
+    border-top: 1px solid var(--border); display: flex; padding-top: 12px; 
+    padding-bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 1000; 
 }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--text3); cursor: pointer; }
 .nav-icon { width: 24px; height: 24px; }
 .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
 .nav-item.active { color: var(--accent); }
 
-/* WHEEL PICKER (2 MOŽNOSTI) */
+/* WHEEL PICKER (2 COLUMNS) */
 .picker-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: flex-end; }
 .picker-overlay.open { display: flex; }
 .picker-modal { background: var(--surface); border-radius: 30px 30px 0 0; width: 100%; max-width: 500px; margin: 0 auto; padding: 24px 24px calc(40px + env(safe-area-inset-bottom)); }
-.picker-wheels { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    height: 200px; 
-    position: relative; 
-    overflow: hidden; 
-    background: var(--surface2); 
-    border-radius: 20px; 
-    margin-top: 20px;
-}
+.picker-wheels { display: grid; grid-template-columns: 1fr 1fr; height: 200px; position: relative; overflow: hidden; background: var(--surface2); border-radius: 20px; margin-top: 20px; }
 .picker-wheel { overflow-y: auto; scroll-snap-type: y mandatory; text-align: center; scrollbar-width: none; }
 .picker-wheel::-webkit-scrollbar { display: none; }
 .picker-item { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px; scroll-snap-align: center; color: var(--text); font-weight: 600; }
 .picker-highlight { position: absolute; top: 70px; left: 0; right: 0; height: 60px; border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); pointer-events: none; background: rgba(255, 211, 68, 0.05); }
 
-/* OSTATNÍ */
-.btn-add { background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 16px; font-weight: 800; width: 100%; font-size: 16px; margin-top: 20px; letter-spacing: 1px; }
+/* BUTTONS & TOAST */
+.btn-add { background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 16px; font-weight: 800; width: 100%; font-size: 16px; margin-top: 20px; }
 .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 700; opacity: 0; transition: 0.3s; z-index: 3000; }
 .toast.show { opacity: 1; }
-.graph-container { height: 180px; margin: 15px 0; background: var(--surface2); border-radius: 16px; padding: 10px; border: 1px solid var(--border); }
+.graph-container { height: 180px; margin: 10px 0; background: var(--surface2); border-radius: 16px; padding: 10px; border: 1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -266,7 +201,7 @@ const DEFAULT_PLAN = [
 let workoutPlan = JSON.parse(localStorage.getItem('ss_plan')) || DEFAULT_PLAN;
 let state = JSON.parse(localStorage.getItem('ss_state')) || {};
 let prData = JSON.parse(localStorage.getItem('ss_pr')) || {};
-let charts = {};
+let statsCharts = {};
 
 function saveAll() {
     localStorage.setItem('ss_plan', JSON.stringify(workoutPlan));
@@ -278,7 +213,7 @@ function renderApp() {
   workoutPlan.forEach(day => {
     const container = document.getElementById('day-' + day.id);
     if(!container) return;
-    let html = `<div class="muscle-label" style="font-size:24px; color:var(--accent); margin: 10px 0 20px;">${day.label.toUpperCase()}</div>`;
+    let html = `<div class="muscle-label" style="font-size:24px; color:var(--accent); margin-bottom:20px;">${day.label.toUpperCase()}</div>`;
     day.sections.forEach(sec => {
       html += `<div class="muscle-section"><div class="muscle-label">${sec.label}</div>`;
       sec.exercises.forEach(ex => {
@@ -298,7 +233,6 @@ function renderApp() {
               </div>
             </div>
             <div class="exercise-body" id="body-${ex.id}" style="display:none; padding:0 20px 20px; border-top:1px solid var(--border)">
-              <div class="graph-container" id="graph-cont-${ex.id}"><canvas id="chart-${ex.id}"></canvas></div>
               <div id="rows-${ex.id}" style="margin-top:15px;"></div>
             </div>
           </div>`;
@@ -315,90 +249,50 @@ function buildRows(id) {
   const container = document.getElementById('rows-'+id);
   const ex = workoutPlan.flatMap(d => d.sections).flatMap(s => s.exercises).find(e => e.id === id);
   if (!state[id]) state[id] = { rows: [], history: [] };
-  if (state[id].rows.length === 0) {
-      state[id].rows = Array.from({length: parseInt(ex.sets)}, () => ({weight: '', reps: '', done: false}));
-  }
-  container.innerHTML = `<div style="display:grid; grid-template-columns:40px 1fr 1fr 40px; font-size:11px; color:var(--text3); margin-bottom:8px; text-align:center; font-weight:bold;"><span>SET</span><span>KG</span><span>REPS</span><span>OK</span></div>`;
+  if (state[id].rows.length === 0) state[id].rows = Array.from({length: parseInt(ex.sets)}, () => ({weight: '', reps: '', done: false}));
+  
+  container.innerHTML = `<div style="display:grid; grid-template-columns:40px 1fr 1fr 40px; font-size:11px; color:var(--text3); margin-bottom:8px; text-align:center;"><span>SET</span><span>KG</span><span>REPS</span><span>OK</span></div>`;
   state[id].rows.forEach((row, i) => {
-    const div = document.createElement('div');
-    div.className = 'series-row';
+    const div = document.createElement('div'); div.className = 'series-row';
     div.innerHTML = `
-      <span style="text-align:center; color:var(--text2); font-size:14px; font-weight:bold;">${i+1}</span>
+      <span style="text-align:center; color:var(--text2); font-size:14px;">${i+1}</span>
       <div class="series-input" onclick="openPicker('${id}', ${i})">${row.weight || '-'}</div>
       <div class="series-input" onclick="openPicker('${id}', ${i})">${row.reps || '-'}</div>
-      <button class="series-done-btn ${row.done?'done':''}" onclick="toggleDone('${id}', ${i})">
-        <i data-lucide="${row.done?'check':'circle'}" style="width:18px"></i>
-      </button>`;
+      <button class="series-done-btn ${row.done?'done':''}" onclick="toggleDone('${id}', ${i})"><i data-lucide="${row.done?'check':'circle'}" style="width:18px"></i></button>`;
     container.appendChild(div);
   });
   lucide.createIcons();
 }
 
-// PICKER LOGIKA (POUZE KG A OPAKOVÁNÍ)
+// PICKER
 let activePicker = null;
 function populateWheels() {
-    const wheelKg = document.getElementById('wheelKg');
-    const wheelReps = document.getElementById('wheelReps');
+    const wheelKg = document.getElementById('wheelKg'); const wheelReps = document.getElementById('wheelReps');
     const pad = '<div class="picker-item"></div>';
-    
-    let kgHtml = pad;
-    for(let i=0; i<=250; i++) kgHtml += `<div class="picker-item" data-val="${i}">${i}</div>`;
-    wheelKg.innerHTML = kgHtml + pad;
-
-    let repsHtml = pad;
-    for(let i=0; i<=50; i++) repsHtml += `<div class="picker-item" data-val="${i}">${i}</div>`;
-    wheelReps.innerHTML = repsHtml + pad;
+    let kgHtml = pad; for(let i=0; i<=250; i++) kgHtml += `<div class="picker-item" data-val="${i}">${i}</div>`; wheelKg.innerHTML = kgHtml + pad;
+    let repsHtml = pad; for(let i=0; i<=50; i++) repsHtml += `<div class="picker-item" data-val="${i}">${i}</div>`; wheelReps.innerHTML = repsHtml + pad;
 }
-
-function openPicker(exId, rowIndex) {
-    activePicker = { exId, rowIndex };
-    if (!document.getElementById('wheelKg').children.length) populateWheels();
-    document.getElementById('pickerOverlay').classList.add('open');
-}
-
+function openPicker(exId, rowIndex) { activePicker = { exId, rowIndex }; if (!document.getElementById('wheelKg').children.length) populateWheels(); document.getElementById('pickerOverlay').classList.add('open'); }
 function closePicker() {
     const getVal = (id) => {
-        const w = document.getElementById(id);
-        const items = w.querySelectorAll('.picker-item[data-val]');
+        const w = document.getElementById(id); const items = w.querySelectorAll('.picker-item[data-val]');
         let closest = items[0]; let minDist = Infinity;
-        items.forEach(i => {
-            const dist = Math.abs(i.offsetTop + i.offsetHeight/2 - w.scrollTop - w.clientHeight/2);
-            if(dist < minDist) { minDist = dist; closest = i; }
-        });
+        items.forEach(i => { const dist = Math.abs(i.offsetTop + i.offsetHeight/2 - w.scrollTop - w.clientHeight/2); if(dist < minDist) { minDist = dist; closest = i; } });
         return closest.dataset.val;
     };
     state[activePicker.exId].rows[activePicker.rowIndex].weight = getVal('wheelKg');
     state[activePicker.exId].rows[activePicker.rowIndex].reps = getVal('wheelReps');
-    saveAll(); buildRows(activePicker.exId);
-    document.getElementById('pickerOverlay').classList.remove('open');
+    saveAll(); buildRows(activePicker.exId); document.getElementById('pickerOverlay').classList.remove('open');
 }
-
-function snapToCenter(wheel) {
-    clearTimeout(wheel.t);
-    wheel.t = setTimeout(() => {
-        const items = wheel.querySelectorAll('.picker-item[data-val]');
-        let closest = items[0]; let minDist = Infinity;
-        items.forEach(i => {
-            const dist = Math.abs(i.offsetTop + i.offsetHeight/2 - wheel.scrollTop - wheel.clientHeight/2);
-            if(dist < minDist) { minDist = dist; closest = i; }
-        });
-        closest.scrollIntoView({block:'center', behavior:'smooth'});
-    }, 100);
-}
+function snapToCenter(wheel) { clearTimeout(wheel.t); wheel.t = setTimeout(() => { const items = wheel.querySelectorAll('.picker-item[data-val]'); let closest = items[0]; let minDist = Infinity; items.forEach(i => { const dist = Math.abs(i.offsetTop + i.offsetHeight/2 - wheel.scrollTop - wheel.clientHeight/2); if(dist < minDist) { minDist = dist; closest = i; } }); closest.scrollIntoView({block:'center', behavior:'smooth'}); }, 100); }
 
 function toggleCard(id) {
-    const body = document.getElementById('body-'+id);
-    const card = document.getElementById('card-'+id);
-    const isOpen = body.style.display === 'block';
-    document.querySelectorAll('.exercise-body').forEach(b => b.style.display = 'none');
-    document.querySelectorAll('.exercise-card').forEach(c => c.classList.remove('expanded'));
-    if(!isOpen) { body.style.display = 'block'; card.classList.add('expanded'); buildRows(id); renderChart(id); }
+    const body = document.getElementById('body-'+id); const card = document.getElementById('card-'+id); const isOpen = body.style.display === 'block';
+    document.querySelectorAll('.exercise-body').forEach(b => b.style.display = 'none'); document.querySelectorAll('.exercise-card').forEach(c => c.classList.remove('expanded'));
+    if(!isOpen) { body.style.display = 'block'; card.classList.add('expanded'); buildRows(id); }
 }
 
-function toggleDone(id, idx) {
-    state[id].rows[idx].done = !state[id].rows[idx].done;
-    saveAll(); buildRows(id);
-}
+function toggleDone(id, idx) { state[id].rows[idx].done = !state[id].rows[idx].done; saveAll(); buildRows(id); }
 
 function finishWorkout(dayId) {
     workoutPlan[dayId].sections.forEach(s => s.exercises.forEach(ex => {
@@ -406,82 +300,85 @@ function finishWorkout(dayId) {
         if(sData && sData.rows.some(r => r.done)) {
             const max = Math.max(...sData.rows.filter(r => r.done).map(r => parseFloat(r.weight) || 0));
             sData.history.push({ date: new Date().toISOString(), maxWeight: max });
-            sData.rows = [];
-            if(max > (prData[ex.id] || 0)) prData[ex.id] = max;
+            sData.rows = []; if(max > (prData[ex.id] || 0)) prData[ex.id] = max;
         }
     }));
     saveAll(); renderApp(); showToast("Trénink uložen");
 }
 
-function renderChart(id) {
-    const ctx = document.getElementById('chart-'+id);
-    const history = state[id]?.history || [];
-    if(history.length < 2) { document.getElementById('graph-cont-'+id).style.display = 'none'; return; }
-    document.getElementById('graph-cont-'+id).style.display = 'block';
-    if(charts[id]) charts[id].destroy();
-    charts[id] = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: history.slice(-6).map(h => new Date(h.date).toLocaleDateString('cs-CZ', {day:'numeric', month:'numeric'})),
-            datasets: [{ data: history.slice(-6).map(h => h.maxWeight), borderColor: '#FFD344', tension: 0.4, fill: false, pointRadius: 0 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { grid: { color: '#222' }, ticks: { color: '#555', font: {size:10} } } } }
-    });
+function switchNav(tab) {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('nav-'+tab).classList.add('active');
+    document.getElementById('mainTabs').style.display = tab === 'workout' ? 'flex' : 'none';
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    if(tab === 'workout') { switchDay(0); } else { document.getElementById(tab+'-view').classList.add('active'); if(tab === 'stats') buildStats(); if(tab === 'editor') renderEditor(); }
 }
 
 function switchDay(d) {
-    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.day-tab')[d].classList.add('active');
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('day-'+d).classList.add('active');
+    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.day-tab')[d].classList.add('active');
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById('day-'+d).classList.add('active');
 }
 
-function switchNav(tab) {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    document.getElementById('nav-'+tab).classList.add('active');
-    document.getElementById('mainTabs').style.display = tab === 'workout' ? 'flex' : 'none';
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    if(tab === 'workout') {
-        const activeIdx = Array.from(document.querySelectorAll('.day-tab')).findIndex(t => t.classList.contains('active'));
-        document.getElementById('day-'+activeIdx).classList.add('active');
-    } else {
-        document.getElementById(tab+'-view').classList.add('active');
-        if(tab === 'stats') buildStats();
-        if(tab === 'editor') renderEditor();
-    }
-}
-
+// REKORDY (PLNĚ FUNKČNÍ S GRAFEM)
 function buildStats() {
     const content = document.getElementById('stats-content');
     let html = '';
     workoutPlan.forEach(d => d.sections.forEach(s => s.exercises.forEach(ex => {
         const pr = prData[ex.id] || '—';
-        html += `<div style="background:var(--surface); padding:16px; border-radius:16px; margin-bottom:10px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-            <div><div style="font-weight:600">${ex.name}</div><div style="font-size:10px; color:var(--text3)">${s.label}</div></div>
-            <div style="color:var(--accent); font-weight:800; font-size:18px;">${pr} kg</div>
+        html += `
+        <div class="exercise-card">
+            <div class="exercise-header" onclick="toggleStatsGraph('${ex.id}')">
+                <div class="exercise-info">
+                    <div class="exercise-name">${ex.name}</div>
+                    <div style="font-size:10px; color:var(--text3)">${s.label}</div>
+                </div>
+                <div style="color:var(--accent); font-weight:800; font-size:18px;">${pr} kg</div>
+            </div>
+            <div id="stats-body-${ex.id}" style="display:none; padding:0 20px 20px; border-top:1px solid var(--border);">
+                <div class="graph-container"><canvas id="stats-chart-${ex.id}"></canvas></div>
+            </div>
         </div>`;
     })));
     content.innerHTML = html;
 }
 
+function toggleStatsGraph(id) {
+    const body = document.getElementById('stats-body-'+id);
+    const isOpen = body.style.display === 'block';
+    document.querySelectorAll('[id^="stats-body-"]').forEach(b => b.style.display = 'none');
+    if(!isOpen) { body.style.display = 'block'; renderStatsChart(id); }
+}
+
+function renderStatsChart(id) {
+    const ctx = document.getElementById('stats-chart-'+id);
+    const history = state[id]?.history || [];
+    if(history.length < 2) { ctx.parentElement.innerHTML = '<div style="text-align:center; color:var(--text3); font-size:12px; padding:60px 0;">Nedostatek dat pro graf</div>'; return; }
+    if(statsCharts[id]) statsCharts[id].destroy();
+    statsCharts[id] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: history.map(h => new Date(h.date).toLocaleDateString('cs-CZ', {day:'numeric', month:'numeric'})),
+            datasets: [{ data: history.map(h => h.maxWeight), borderColor: '#FFD344', tension: 0.4, fill: false, pointRadius: 2 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#555', font: {size:10} } }, y: { grid: { color: '#222' }, ticks: { color: '#555', font: {size:10} } } } }
+    });
+}
+
 function renderEditor() {
     const cont = document.getElementById('editor-content');
     let html = '';
-    workoutPlan.forEach((day, dIdx) => {
+    workoutPlan.forEach((day) => {
         html += `<div style="background:var(--surface2); padding:15px; border-radius:16px; margin-bottom:15px; border:1px solid var(--border);">
             <div style="font-weight:800; color:var(--accent); margin-bottom:10px;">${day.label}</div>
-            ${day.sections.map(sec => `<div style="font-size:12px; color:var(--text2); margin-bottom:5px;">• ${sec.label}: ${sec.exercises.length} cviků</div>`).join('')}
+            ${day.sections.map(sec => `<div style="font-size:12px; color:var(--text2); margin-bottom:5px;">• ${sec.label}</div>`).join('')}
         </div>`;
     });
-    html += `<button class="btn-add" onclick="localStorage.clear();location.reload()" style="background:none; border:1px solid var(--text3); color:var(--text3);">RESET VŠEHO</button>`;
+    html += `<button class="btn-add" onclick="if(confirm('Resetovat vše?')){localStorage.clear();location.reload()}" style="background:none; border:1px solid #ff4444; color:#ff4444;">SMAZAT VŠE</button>`;
     cont.innerHTML = html;
 }
 
 function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
 function setDate() { 
-    const n = new Date(); 
-    const d = ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota']; 
-    const m = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']; 
+    const n = new Date(); const d = ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota']; const m = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']; 
     document.getElementById('headerDate').innerText = d[n.getDay()] + '\n' + n.getDate() + '. ' + m[n.getMonth()]; 
 }
 
