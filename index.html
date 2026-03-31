@@ -45,7 +45,7 @@
 .logo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--accent); }
 .header-date { font-size: 13px; color: var(--text2); text-align: right; white-space: pre-line; line-height: 1.2; }
 
-/* DAY TABS - FULL WIDTH */
+/* DAY TABS */
 .day-tabs { display: flex; padding: 0 20px 16px; gap: 10px; flex-shrink: 0; }
 .day-tab { 
     flex: 1; padding: 14px 0; border-radius: 14px; font-size: 14px; font-weight: 700; 
@@ -77,7 +77,7 @@
 .exercise-card.expanded { border-color: var(--accent); }
 .exercise-header { display: flex; align-items: center; padding: 18px 20px; cursor: pointer; gap: 14px; }
 .exercise-info { flex: 1; min-width: 0; }
-.exercise-name { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.exercise-name { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
 
 .pr-badge { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--accent); background: rgba(255, 211, 68, 0.1); padding: 4px 10px; border-radius: 100px; }
 .current-weight { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px; }
@@ -97,6 +97,11 @@
 }
 .series-done-btn.done { background: var(--accent); color: #000; }
 
+/* EDITOR INPUTS */
+.editor-group { background: var(--surface); padding: 15px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 15px; }
+.edit-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: white; padding: 10px; margin-bottom: 8px; font-family: inherit; font-size: 14px; }
+.edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
 /* BOTTOM NAV */
 .bottom-nav { 
     position: fixed; bottom: 0; left: 0; right: 0;
@@ -109,7 +114,7 @@
 .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
 .nav-item.active { color: var(--accent); }
 
-/* WHEEL PICKER (2 COLUMNS) */
+/* WHEEL PICKER */
 .picker-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: flex-end; }
 .picker-overlay.open { display: flex; }
 .picker-modal { background: var(--surface); border-radius: 30px 30px 0 0; width: 100%; max-width: 500px; margin: 0 auto; padding: 24px 24px calc(40px + env(safe-area-inset-bottom)); }
@@ -145,7 +150,7 @@
   <div id="day-2" class="view"></div>
   
   <div id="stats-view" class="view"><div class="muscle-label">REKORDY</div><div id="stats-content"></div></div>
-  <div id="editor-view" class="view"><div class="muscle-label">EDITOR</div><div id="editor-content"></div></div>
+  <div id="editor-view" class="view"><div class="muscle-label">EDITOR PLÁNU</div><div id="editor-content"></div></div>
 </div>
 
 <div class="bottom-nav">
@@ -185,16 +190,16 @@
 <script>
 const DEFAULT_PLAN = [
   { id: 0, label: "Den 1: Nohy + Biceps", sections: [
-    { label: "BICEPS", exercises: [ { id: 'ex1', name:'Preacher curl', sets:4, reps:'8-10' }, { id: 'ex2', name:'Hammer curl', sets:3, reps:'10-12' }, { id: 'ex3', name:'Incline dumbbell curl', sets:3, reps:'10-12' } ] },
-    { label: "NOHY", exercises: [ { id: 'ex4', name:'Leg press', sets:4, reps:'12' }, { id: 'ex5', name:'Lying leg curl', sets:3, reps:'10-12' }, { id: 'ex6', name:'Calf raises', sets:3, reps:'20' } ] }
+    { label: "BICEPS", exercises: [ { id: 'ex1', name:'Preacher curl', sets:4, reps:'8-10', video:'' }, { id: 'ex2', name:'Hammer curl', sets:3, reps:'10-12', video:'' }, { id: 'ex3', name:'Incline dumbbell curl', sets:3, reps:'10-12', video:'' } ] },
+    { label: "NOHY", exercises: [ { id: 'ex4', name:'Leg press', sets:4, reps:'12', video:'' }, { id: 'ex5', name:'Lying leg curl', sets:3, reps:'10-12', video:'' }, { id: 'ex6', name:'Calf raises', sets:3, reps:'20', video:'' } ] }
   ]},
   { id: 1, label: "Den 2: Záda + Ramena", sections: [
-    { label: "ZÁDA", exercises: [ { id: 'ex7', name:'Lat pulldown', sets:4, reps:'12' }, { id: 'ex8', name:'Cable row', sets:4, reps:'10' }, { id: 'ex9', name:'Hyperextenze', sets:3, reps:'12-15' } ] },
-    { label: "RAMENA", exercises: [ { id: 'ex10', name:'Shoulder press', sets:4, reps:'10' }, { id: 'ex11', name:'Arnold press', sets:3, reps:'12' }, { id: 'ex12', name:'Reverse fly', sets:3, reps:'12' } ] }
+    { label: "ZÁDA", exercises: [ { id: 'ex7', name:'Lat pulldown', sets:4, reps:'12', video:'' }, { id: 'ex8', name:'Cable row', sets:4, reps:'10', video:'' }, { id: 'ex9', name:'Hyperextenze', sets:3, reps:'12-15', video:'' } ] },
+    { label: "RAMENA", exercises: [ { id: 'ex10', name:'Shoulder press', sets:4, reps:'10', video:'' }, { id: 'ex11', name:'Arnold press', sets:3, reps:'12', video:'' }, { id: 'ex12', name:'Reverse fly', sets:3, reps:'12', video:'' } ] }
   ]},
   { id: 2, label: "Den 3: Hrudník + Triceps", sections: [
-    { label: "HRUDNÍK", exercises: [ { id: 'ex13', name:'Bench press', sets:4, reps:'12' }, { id: 'ex14', name:'Peck deck', sets:3, reps:'10' }, { id: 'ex15', name:'Incline dumbell press', sets:3, reps:'12-15' } ] },
-    { label: "TRICEPS", exercises: [ { id: 'ex16', name:'Overhead DB extension', sets:3, reps:'10' }, { id: 'ex17', name:'Dumbbell kickbacks', sets:3, reps:'12' }, { id: 'ex18', name:'Cable triceps pushdown', sets:4, reps:'12' } ] }
+    { label: "HRUDNÍK", exercises: [ { id: 'ex13', name:'Bench press', sets:4, reps:'12', video:'' }, { id: 'ex14', name:'Peck deck', sets:3, reps:'10', video:'' }, { id: 'ex15', name:'Incline dumbell press', sets:3, reps:'12-15', video:'' } ] },
+    { label: "TRICEPS", exercises: [ { id: 'ex16', name:'Overhead DB extension', sets:3, reps:'10', video:'' }, { id: 'ex17', name:'Dumbbell kickbacks', sets:3, reps:'12', video:'' }, { id: 'ex18', name:'Cable triceps pushdown', sets:4, reps:'12', video:'' } ] }
   ]}
 ];
 
@@ -220,11 +225,15 @@ function renderApp() {
         const pr = prData[ex.id] || '—';
         const hist = state[ex.id]?.history || [];
         const lastWeight = hist.length > 0 ? hist[hist.length-1].maxWeight : '—';
+        
+        // Přidání ikony videa pokud existuje URL
+        const videoBtn = ex.video ? `<a href="${ex.video}" target="_blank" style="color:var(--accent);"><i data-lucide="video" style="width:16px;"></i></a>` : '';
+
         html += `
           <div id="card-${ex.id}" class="exercise-card">
             <div class="exercise-header" onclick="toggleCard('${ex.id}')">
               <div class="exercise-info">
-                <div class="exercise-name">${ex.name}</div>
+                <div class="exercise-name">${ex.name} ${videoBtn}</div>
                 <div style="font-size:12px; color:var(--text2)">${ex.sets} série / ${ex.reps} reps</div>
               </div>
               <div style="text-align:right">
@@ -264,7 +273,7 @@ function buildRows(id) {
   lucide.createIcons();
 }
 
-// PICKER
+// PICKER LOGIC
 let activePicker = null;
 function populateWheels() {
     const wheelKg = document.getElementById('wheelKg'); const wheelReps = document.getElementById('wheelReps');
@@ -318,7 +327,7 @@ function switchDay(d) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById('day-'+d).classList.add('active');
 }
 
-// REKORDY (PLNĚ FUNKČNÍ S GRAFEM)
+// REKORDY
 function buildStats() {
     const content = document.getElementById('stats-content');
     let html = '';
@@ -363,17 +372,47 @@ function renderStatsChart(id) {
     });
 }
 
+// EDITOR - OPRAVENÁ A FUNKČNÍ VERZE
 function renderEditor() {
     const cont = document.getElementById('editor-content');
     let html = '';
-    workoutPlan.forEach((day) => {
-        html += `<div style="background:var(--surface2); padding:15px; border-radius:16px; margin-bottom:15px; border:1px solid var(--border);">
-            <div style="font-weight:800; color:var(--accent); margin-bottom:10px;">${day.label}</div>
-            ${day.sections.map(sec => `<div style="font-size:12px; color:var(--text2); margin-bottom:5px;">• ${sec.label}</div>`).join('')}
-        </div>`;
+    
+    workoutPlan.forEach((day, dIdx) => {
+        html += `<div class="muscle-label" style="color:var(--accent); margin-top:10px;">${day.label}</div>`;
+        
+        day.sections.forEach((sec, sIdx) => {
+            html += `<div style="font-size:12px; color:var(--text3); margin-bottom:10px; margin-top:20px; letter-spacing:1px;">${sec.label}</div>`;
+            
+            sec.exercises.forEach((ex, eIdx) => {
+                html += `
+                <div class="editor-group">
+                    <input type="text" class="edit-input" placeholder="Název cviku" value="${ex.name}" 
+                        oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'name', this.value)">
+                    
+                    <div class="edit-row">
+                        <input type="text" class="edit-input" placeholder="Série" value="${ex.sets}" 
+                            oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'sets', this.value)">
+                        <input type="text" class="edit-input" placeholder="Opakování" value="${ex.reps}" 
+                            oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'reps', this.value)">
+                    </div>
+                    
+                    <input type="text" class="edit-input" placeholder="Video URL (YouTube)" value="${ex.video || ''}" 
+                        oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'video', this.value)">
+                </div>`;
+            });
+        });
     });
-    html += `<button class="btn-add" onclick="if(confirm('Resetovat vše?')){localStorage.clear();location.reload()}" style="background:none; border:1px solid #ff4444; color:#ff4444;">SMAZAT VŠE</button>`;
+    
+    html += `<button class="btn-add" onclick="if(confirm('Resetovat vše do továrního nastavení?')){localStorage.clear();location.reload()}" style="background:none; border:1px solid #ff4444; color:#ff4444; margin-bottom:40px;">SMAZAT VEŠKERÁ DATA</button>`;
     cont.innerHTML = html;
+}
+
+function updatePlan(dIdx, sIdx, eIdx, field, value) {
+    workoutPlan[dIdx].sections[sIdx].exercises[eIdx][field] = value;
+    saveAll();
+    // Nechceme překreslovat celý editor při každém stisku klávesy (input lag), 
+    // ale musíme zajistit že se změny projeví v tréninkovém view
+    setTimeout(renderApp, 100); 
 }
 
 function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
