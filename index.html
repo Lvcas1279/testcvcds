@@ -6,17 +6,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="SvalStats"/>
-<meta name="theme-color" content="#000000"/>
 <title>SvalStats</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root {
-  /* UPRAVENÉ BARVY PRO LEPŠÍ VZHLED */
   --bg: #050505;
-  --surface: rgba(20, 20, 20, 0.7); /* Poloprůhledná pro skleněný efekt */
-  --surface2: rgba(30, 30, 30, 0.5);
-  --surface3: rgba(40, 40, 40, 0.5);
+  --surface: rgba(20, 20, 20, 0.7);
+  --surface2: rgba(30, 30, 30, 0.6);
   --border: rgba(255, 255, 255, 0.08);
   --accent: #FFD344;
   --accent-soft: rgba(255, 211, 68, 0.1);
@@ -24,396 +21,374 @@
   --text2: #a0a0a0;
   --text3: #666666;
   --radius: 24px;
-  --radius-sm: 16px;
 }
 
 [data-theme="light"] {
-  --bg: #f8f8f4;
+  --bg: #f4f4f0;
   --surface: rgba(255, 255, 255, 0.8);
-  --surface2: #f0f0eb;
-  --surface3: #e4e4df;
-  --border: rgba(0, 0, 0, 0.06);
-  --text: #0a0a0a;
-  --text2: #666;
-  --text3: #aaa;
+  --surface2: #e8e8e0;
+  --border: rgba(0, 0, 0, 0.08);
+  --text: #1a1a1a;
+  --text2: #555555;
+  --text3: #999999;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-html { 
-  height: 100dvh; 
-  background: var(--bg); 
-}
-
 body {
   font-family: 'Outfit', sans-serif;
   color: var(--text);
-  /* HLAVNÍ ZMĚNA POZADÍ: Elegantní gradient s jemným odleskem accent barvy */
-  background: 
-    radial-gradient(circle at 0% 0%, rgba(255, 211, 68, 0.07) 0%, transparent 40%),
-    radial-gradient(circle at 100% 100%, rgba(255, 211, 68, 0.03) 0%, transparent 40%),
-    var(--bg);
+  background: radial-gradient(circle at 0% 0%, rgba(255, 211, 68, 0.05) 0%, transparent 40%), var(--bg);
   height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   max-width: 500px;
   margin: 0 auto;
-  overscroll-behavior: none;
-  position: fixed;
-  width: 100%;
 }
 
 /* HEADER */
 .header {
-  padding: calc(env(safe-area-inset-top) + 14px) 22px 14px;
-  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  padding: calc(env(safe-area-inset-top) + 15px) 20px 15px;
+  display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
-.logo { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; color: var(--accent); }
+.logo { font-size: 24px; font-weight: 900; color: var(--accent); }
 .logo span { color: var(--text); }
-.hdr-right { display: flex; align-items: center; gap: 10px; }
-.hdr-date { font-size: 12px; color: var(--text2); text-align: right; white-space: pre-line; line-height: 1.35; }
-.icon-btn { 
-  width: 36px; height: 36px; border-radius: 12px; background: var(--surface2);
-  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text2); transition: all .15s; flex-shrink: 0;
-}
-.icon-btn:active { transform: scale(.9); }
-.icon-btn svg { width: 17px; height: 17px; }
 
-/* PROGRESS BAR */
-.prog-bar { height: 3px; background: var(--border); flex-shrink: 0; }
-.prog-fill { height: 100%; background: var(--accent); width: 0%; transition: width .5s ease; box-shadow: 0 0 10px var(--accent-soft); }
-
-/* DAY TABS */
-.day-tabs { display: flex; gap: 8px; padding: 14px 22px 12px; flex-shrink: 0; }
-.day-tab { 
-  flex: 1; padding: 11px 0; border-radius: 14px; font-size: 13px; font-weight: 700;
-  background: var(--surface2); color: var(--text2); cursor: pointer;
-  border: 1px solid var(--border); text-align: center; transition: .2s; letter-spacing: .3px;
-}
-.day-tab.active { 
-  background: var(--accent); color: #000; border-color: var(--accent);
-  box-shadow: 0 8px 20px rgba(255, 211, 68, 0.2); 
-}
-
-/* SCROLL */
-.scroll-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior: contain; }
+/* CONTENT */
+.scroll-area { flex: 1; overflow-y: auto; padding-bottom: 120px; scrollbar-width: none; }
 .scroll-area::-webkit-scrollbar { display: none; }
-.view { display: none; padding: 0 22px 140px; }
+.view { display: none; padding: 0 20px; }
 .view.active { display: block; }
+
 .section-label { 
-  font-size: 10px; font-weight: 800; letter-spacing: 2px; color: var(--text3);
-  text-transform: uppercase; margin: 26px 0 12px; display: flex; align-items: center; gap: 10px; 
+  font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--text3);
+  text-transform: uppercase; margin: 25px 0 15px; display: flex; align-items: center; gap: 10px;
 }
 .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-/* EXERCISE CARD (GLASS EFFECT) */
+/* CARDS */
 .ex-card { 
-  background: var(--surface); 
-  border-radius: var(--radius);
-  border: 1px solid var(--border); 
-  margin-bottom: 12px; 
-  overflow: hidden;
-  backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); /* Skleněný efekt */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-  transition: all 0.3s ease;
+  background: var(--surface); border: 1px solid var(--border); 
+  border-radius: var(--radius); margin-bottom: 12px; overflow: hidden;
+  backdrop-filter: blur(15px);
 }
-.ex-card.open { border-color: rgba(255,211,68,0.4); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
-.ex-hdr { display: flex; align-items: center; padding: 18px 20px; cursor: pointer; gap: 14px; -webkit-user-select: none; }
-.ex-name { font-size: 17px; font-weight: 700; color: var(--text); }
-.ex-meta { font-size: 12px; color: var(--text2); margin-top: 3px; opacity: 0.8; }
-.ex-cw { font-size: 22px; font-weight: 900; color: var(--text); letter-spacing: -0.5px; }
-.ex-cw span { font-size: 12px; color: var(--text2); font-weight: 500; margin-left: 2px; }
-.pr-badge { 
-  display: inline-flex; align-items: center; gap: 4px; font-size: 11px;
-  font-weight: 700; color: var(--accent); background: var(--accent-soft);
-  padding: 4px 10px; border-radius: 99px; margin-bottom: 5px;
-}
-
-/* CARD BODY */
-.ex-body { display: none; padding: 0 20px 22px; border-top: 1px solid var(--border); }
-
-/* INFO BOXES */
-.info-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
-.info-box { 
-  background: var(--surface2); border-radius: var(--radius-sm);
-  padding: 12px 14px; border: 1px solid var(--border); position: relative;
-}
-.info-lbl { font-size: 9px; font-weight: 800; color: var(--text3); text-transform: uppercase; margin-bottom: 4px; }
-.info-val { font-size: 20px; font-weight: 900; color: var(--accent); }
+.ex-hdr { padding: 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.ex-body { display: none; padding: 0 18px 18px; border-top: 1px solid var(--border); }
 
 /* SETS */
-.set-row { display: grid; grid-template-columns: 36px 1fr 1fr 46px; gap: 10px; margin-bottom: 10px; align-items: center; }
-.set-field { 
-  background: var(--surface2); border: 1.5px solid var(--border);
-  border-radius: 14px; height: 52px; display: flex; align-items: center;
-  justify-content: center; cursor: pointer; transition: all .15s;
+.set-row { display: grid; grid-template-columns: 30px 1fr 1fr 45px; gap: 10px; margin-top: 10px; align-items: center; }
+.set-input { 
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+    height: 45px; border-radius: 12px; text-align: center; font-weight: 600; font-family: inherit;
 }
-.set-field.filled { border-color: rgba(255,211,68,0.2); }
-.set-field.is-pr { border-color: var(--accent); background: var(--accent-soft); }
-.set-done { 
-  width: 46px; height: 52px; border-radius: 14px; background: var(--surface2);
-  border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
-  color: var(--text3); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.btn-done { 
+    height: 45px; border-radius: 12px; border: none; background: var(--surface2); 
+    color: var(--text3); font-weight: bold; cursor: pointer;
 }
-.set-done.on { background: var(--accent); border-color: var(--accent); color: #000; transform: scale(1.05); box-shadow: 0 5px 15px rgba(255,211,68,0.3); }
+.btn-done.active { background: var(--accent); color: #000; }
 
-/* BOTTOM NAV */
+/* NAV */
 .bot-nav { 
-  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 500px; background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-  border-top: 1px solid var(--border); display: flex;
-  padding-top: 12px; padding-bottom: calc(15px + env(safe-area-inset-bottom));
-  z-index: 100; transition: transform .3s ease;
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px;
+  background: rgba(10,10,10,0.8); backdrop-filter: blur(20px); border-top: 1px solid var(--border);
+  display: flex; padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
 }
-.nav-it { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text3); text-decoration: none; }
+.nav-it { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text3); cursor: pointer; }
 .nav-it.active { color: var(--accent); }
-.nav-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.nav-lbl { font-size: 10px; font-weight: 700; }
 
-/* GRAPH */
-.graph-wrap { 
-  height: 140px; background: rgba(0,0,0,0.2); border-radius: var(--radius-sm);
-  padding: 12px; border: 1px solid var(--border); margin-bottom: 16px;
+/* UTILS */
+.btn-primary { 
+    width: 100%; padding: 16px; border-radius: 18px; background: var(--accent); 
+    color: #000; border: none; font-weight: 800; cursor: pointer; margin-top: 10px;
 }
+.video-link { color: var(--accent); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.chart-container { background: var(--surface2); border-radius: 15px; padding: 10px; margin-bottom: 20px; height: 200px; }
+.day-tabs { display: flex; gap: 8px; padding: 15px 20px; overflow-x: auto; }
+.day-tab { padding: 10px 20px; background: var(--surface2); border-radius: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; border: 1px solid var(--border); }
+.day-tab.active { background: var(--accent); color: #000; }
 
-/* FINISH BUTTON */
-.finish-wrap { padding: 10px 0 30px; }
-.finish-btn { 
-  width: 100%; padding: 18px; border-radius: var(--radius);
-  background: var(--accent); color: #000; font-size: 16px; font-weight: 800;
-  border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(255,211,68,0.3);
-}
-
-/* TOAST */
-.toast { 
-  position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-10px);
-  background: var(--accent); color: #000; padding: 12px 24px; border-radius: 99px;
-  font-size: 14px; font-weight: 800; opacity: 0; transition: 0.4s; z-index: 999;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* Ostatní styly zůstávají zachovány pro funkčnost... */
-.pick-ovl, .pr-ovl { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(5px); }
-.pick-ovl.open, .pr-ovl.open { display: flex; }
-.pick-sheet, .pr-sheet { background: #111; border-radius: 32px 32px 0 0; width: 100%; max-width: 500px; padding: 24px 24px calc(30px + env(safe-area-inset-bottom)); border: 1px solid var(--border); border-bottom: none; }
-.pick-done { background: var(--accent); color: #000; border: none; font-weight: 800; padding: 10px 24px; border-radius: 99px; cursor: pointer; }
-.pick-wheels { display: grid; grid-template-columns: 1fr 1fr; height: 200px; position: relative; overflow: hidden; background: #181818; border-radius: 20px; border: 1px solid var(--border); }
-.pick-whl { overflow-y: auto; scroll-snap-type: y mandatory; text-align: center; scrollbar-width: none; }
-.pick-whl::-webkit-scrollbar { display: none; }
-.pick-item { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; scroll-snap-align: center; color: var(--text2); }
-.pick-hl { position: absolute; top: 70px; left: 0; right: 0; height: 60px; border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); background: rgba(255,211,68,0.05); pointer-events: none; }
+/* EDITOR STYLES */
+.editor-item { background: var(--surface2); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--border); }
+.editor-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 8px; margin-bottom: 5px; }
 </style>
 </head>
-<body>
+<body data-theme="dark">
 
 <div class="header">
   <div class="logo">Sval<span>Stats</span></div>
-  <div class="hdr-right">
-    <div class="hdr-date" id="hdrDate"></div>
-    <button class="icon-btn" onclick="toggleTheme()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-    </button>
-  </div>
+  <div id="hdrDate" style="font-size: 12px; color: var(--text2)"></div>
 </div>
-<div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
 
 <div class="day-tabs" id="dayTabs"></div>
 
-<div class="scroll-area" id="mainScroll">
-  <div id="day-0" class="view active"></div>
-  <div id="day-1" class="view"></div>
-  <div id="day-2" class="view"></div>
-  <div id="stats-view" class="view"><div class="section-label">Rekordy</div><div id="stats-ct"></div></div>
-  <div id="editor-view" class="view"><div class="section-label">Editor tréninku</div><div id="editor-ct"></div></div>
-  <div id="settings-view" class="view"><div class="section-label">Nastavení</div><div id="settings-ct"></div></div>
+<div class="scroll-area">
+  <div id="workout-view" class="view active">
+    <div id="exercise-list"></div>
+    <button class="btn-primary" style="margin: 20px 0" onclick="finishWorkout()">DOKONČIT TRÉNINK</button>
+  </div>
+
+  <div id="stats-view" class="view">
+    <div class="section-label">Historie a progres</div>
+    <div id="stats-container"></div>
+  </div>
+
+  <div id="editor-view" class="view">
+    <div class="section-label">Upravit tréninkový plán</div>
+    <div id="editor-container"></div>
+    <button class="btn-primary" onclick="addNewDay()">+ Přidat nový den</button>
+  </div>
+
+  <div id="settings-view" class="view">
+    <div class="section-label">Vzhled</div>
+    <button class="btn-primary" style="background: var(--surface2); color: var(--text)" onclick="toggleTheme()">Přepnout Tmavý / Světlý režim</button>
+    
+    <div class="section-label">Data a export</div>
+    <p style="font-size: 12px; color: var(--text2); margin-bottom: 10px;">Exportuj data pro analýzu tvou AI.</p>
+    <button class="btn-primary" onclick="exportData()">Exportovat data (JSON)</button>
+    <button class="btn-primary" style="background: #ff4444; color: white" onclick="resetData()">Smazat všechna data</button>
+  </div>
 </div>
 
-<nav class="bot-nav" id="botNav">
-  <div class="nav-it active" id="nav-workout" onclick="switchNav('workout')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11M3 12h18M6.5 17.5h11"/><circle cx="3" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="21" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg>
-    <div class="nav-lbl">Trénink</div>
-  </div>
-  <div class="nav-it" id="nav-stats" onclick="switchNav('stats')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    <div class="nav-lbl">Rekordy</div>
-  </div>
-  <div class="nav-it" id="nav-editor" onclick="switchNav('editor')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-    <div class="nav-lbl">Editor</div>
-  </div>
-  <div class="nav-it" id="nav-settings" onclick="switchNav('settings')">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    <div class="nav-lbl">Nastavení</div>
-  </div>
+<nav class="bot-nav">
+  <div class="nav-it active" onclick="switchNav('workout', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg><div class="nav-lbl">Trénink</div></div>
+  <div class="nav-it" onclick="switchNav('stats', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><div class="nav-lbl">Rekordy</div></div>
+  <div class="nav-it" onclick="switchNav('editor', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><div class="nav-lbl">Editor</div></div>
+  <div class="nav-it" onclick="switchNav('settings', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><div class="nav-lbl">Nastavení</div></div>
 </nav>
 
-<div class="pick-ovl" id="pickOvl"><div class="pick-sheet"><div class="pick-top"><span style="font-weight:800">Nastavit sérii</span><button class="pick-done" onclick="closePicker()">Hotovo</button></div><div class="pick-wheels"><div class="pick-hl"></div><div class="pick-whl" id="wKg"></div><div class="pick-whl" id="wReps"></div></div></div></div>
-<div class="pr-ovl" id="prOvl"><div class="pr-sheet"><div id="prTitle" style="font-weight:800;margin-bottom:15px;text-align:center">Rekord</div><input type="number" id="prInp" style="width:100%;padding:15px;background:#222;border:1px solid #444;border-radius:15px;color:#fff;font-size:24px;text-align:center;margin-bottom:15px"><button class="finish-btn" onclick="savePr()">Uložit rekord</button></div></div>
-<div class="toast" id="toast"></div>
-
 <script>
-// JavaScript logika zůstává stejná, jen s drobnými opravami pro nové UI...
-'use strict';
-const DEF = [
-  {id:0,label:"Den 1: Nohy + Biceps",sections:[
-    {label:"BICEPS",exercises:[
-      {id:'ex1',name:'Preacher curl',sets:4,reps:'8-10',video:''},
-      {id:'ex2',name:'Hammer curl',sets:3,reps:'10-12',video:''}]},
-    {label:"NOHY",exercises:[
-      {id:'ex4',name:'Leg press',sets:4,reps:'12',video:''}]}]}
+// --- DATA ---
+let plan = JSON.parse(localStorage.getItem('ss_plan')) || [
+    { label: "Den 1", exercises: [{ id: "ex_1", name: "Benchpress", sets: 3, reps: "10", video: "https://youtube.com" }] }
 ];
-
-let plan = JSON.parse(localStorage.getItem('ss4_plan') || 'null') || DEF;
-let state = JSON.parse(localStorage.getItem('ss4_state') || '{}');
-let prs = JSON.parse(localStorage.getItem('ss4_prs') || '{}');
-let charts = {}, curDay = 0, activePicker = null, activePrId = null;
+let history = JSON.parse(localStorage.getItem('ss_history')) || {}; 
+let curDayIdx = 0;
 
 function save() {
-  localStorage.setItem('ss4_plan', JSON.stringify(plan));
-  localStorage.setItem('ss4_state', JSON.stringify(state));
-  localStorage.setItem('ss4_prs', JSON.stringify(prs));
+    localStorage.setItem('ss_plan', JSON.stringify(plan));
+    localStorage.setItem('ss_history', JSON.stringify(history));
 }
 
-function toggleTheme() {
-  const cur = document.documentElement.getAttribute('data-theme') || 'dark';
-  const nxt = cur === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', nxt);
-  localStorage.setItem('ss4_theme', nxt);
+// --- NAVIGATION ---
+function switchNav(viewId, el) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.getElementById(viewId + '-view').classList.add('active');
+    document.querySelectorAll('.nav-it').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    
+    if (viewId === 'stats') renderStats();
+    if (viewId === 'editor') renderEditor();
+    if (viewId === 'workout') renderWorkout();
 }
 
-function updateProg() {
-  const day = plan[curDay];
-  if (!day) return;
-  let tot = 0, done = 0;
-  day.sections.forEach(s => s.exercises.forEach(ex => {
-    const rows = (state[ex.id] && state[ex.id].rows) || [];
-    tot += rows.length || parseInt(ex.sets);
-    done += rows.filter(r => r.done).length;
-  }));
-  document.getElementById('progFill').style.width = (tot > 0 ? Math.round(done/tot*100) : 0) + '%';
-}
+// --- WORKOUT LOGIC ---
+function renderWorkout() {
+    const tabs = document.getElementById('dayTabs');
+    tabs.innerHTML = plan.map((day, i) => `
+        <div class="day-tab ${i === curDayIdx ? 'active' : ''}" onclick="curDayIdx=${i}; renderWorkout()">${day.label}</div>
+    `).join('');
 
-function switchNav(tab) {
-  document.querySelectorAll('.nav-it').forEach(i => i.classList.remove('active'));
-  document.getElementById('nav-' + tab)?.classList.add('active');
-  document.getElementById('dayTabs').style.display = tab === 'workout' ? 'flex' : 'none';
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  if (tab === 'workout') document.getElementById('day-' + curDay).classList.add('active');
-  else document.getElementById(tab + '-view').classList.add('active');
-}
-
-function switchDay(d) {
-  curDay = d;
-  renderDayTabs();
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('day-' + d).classList.add('active');
-  renderDay(d);
-  updateProg();
-}
-
-function renderDayTabs() {
-  const tabs = document.getElementById('dayTabs');
-  tabs.innerHTML = '';
-  plan.forEach((d, i) => {
-    const b = document.createElement('div');
-    b.className = 'day-tab' + (i === curDay ? ' active' : '');
-    b.textContent = 'Den ' + (i+1);
-    b.onclick = () => switchDay(i);
-    tabs.appendChild(b);
-  });
-}
-
-function renderDay(idx) {
-  const day = plan[idx];
-  const cont = document.getElementById('day-' + idx);
-  if (!cont || !day) return;
-  let html = '';
-  day.sections.forEach(sec => {
-    html += `<div class="section-label">${sec.label}</div>`;
-    sec.exercises.forEach(ex => {
-      const pr = prs[ex.id];
-      html += `
-        <div class="ex-card" id="card-${ex.id}">
-          <div class="ex-hdr" onclick="toggleCard('${ex.id}')">
-            <div style="flex:1">
-              <div class="ex-name">${ex.name}</div>
-              <div class="ex-meta">${ex.sets} série · ${ex.reps} opak.</div>
+    const list = document.getElementById('exercise-list');
+    const day = plan[curDayIdx];
+    list.innerHTML = `<div class="section-label">${day.label}</div>`;
+    
+    day.exercises.forEach(ex => {
+        list.innerHTML += `
+            <div class="ex-card">
+                <div class="ex-hdr" onclick="toggleCard('${ex.id}')">
+                    <div>
+                        <div style="font-weight:800">${ex.name}</div>
+                        <div style="font-size:12px; color:var(--text2)">${ex.sets} série po ${ex.reps}</div>
+                    </div>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </div>
+                <div class="ex-body" id="body-${ex.id}">
+                    <div style="margin-bottom: 15px">
+                        ${ex.video ? `<a href="${ex.video}" target="_blank" class="video-link">▶ Video návod</a>` : '<span style="font-size:12px;color:var(--text3)">Video není k dispozici</span>'}
+                    </div>
+                    <div id="sets-${ex.id}">
+                        ${Array.from({length: ex.sets}).map((_, i) => `
+                            <div class="set-row">
+                                <span style="font-size:12px; color:var(--text3)">${i+1}.</span>
+                                <input type="number" class="set-input" placeholder="kg" id="w-${ex.id}-${i}">
+                                <input type="number" class="set-input" placeholder="reps" id="r-${ex.id}-${i}">
+                                <button class="btn-done" onclick="this.classList.toggle('active')">✔</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
             </div>
-            <div style="text-align:right">
-               <div class="pr-badge">★ ${pr ? pr+' kg' : '—'}</div>
-               <div class="ex-cw">${pr || '—'} <span>kg</span></div>
-            </div>
-          </div>
-          <div class="ex-body" id="body-${ex.id}">
-            <div class="info-row">
-              <div class="info-box"><div class="info-lbl">Rekord</div><div class="info-val">${pr || '—'} kg</div></div>
-              <div class="info-box"><div class="info-lbl">Status</div><div class="info-val">Aktivní</div></div>
-            </div>
-            <div id="rows-${ex.id}"></div>
-          </div>
-        </div>`;
+        `;
     });
-  });
-  html += `<div class="finish-wrap"><button class="finish-btn" onclick="toast('Trénink dokončen!')">Uložit trénink</button></div>`;
-  cont.innerHTML = html;
 }
 
 function toggleCard(id) {
-  const b = document.getElementById('body-' + id);
-  const isO = b.style.display === 'block';
-  document.querySelectorAll('.ex-body').forEach(x => x.style.display='none');
-  if(!isO) { 
-    b.style.display = 'block'; 
-    buildRows(id);
-  }
+    const b = document.getElementById('body-' + id);
+    b.style.display = b.style.display === 'block' ? 'none' : 'block';
 }
 
-function buildRows(id) {
-  const cont = document.getElementById('rows-' + id);
-  if (!state[id]) state[id] = {rows:[{weight:70, reps:10, done:false}, {weight:70, reps:10, done:false}]};
-  cont.innerHTML = '';
-  state[id].rows.forEach((r, i) => {
-    const div = document.createElement('div');
-    div.className = 'set-row';
-    div.innerHTML = `
-      <div style="font-weight:800;color:var(--text3)">${i+1}</div>
-      <div class="set-field" onclick="openPicker('${id}',${i})">${r.weight} kg</div>
-      <div class="set-field" onclick="openPicker('${id}',${i})">${r.reps}x</div>
-      <button class="set-done ${r.done?'on':''}" onclick="state['${id}'].rows[${i}].done=!state['${id}'].rows[${i}].done;buildRows('${id}');updateProg()">✔</button>
-    `;
-    cont.appendChild(div);
-  });
+function finishWorkout() {
+    const day = plan[curDayIdx];
+    const date = new Date().toLocaleDateString('cs-CZ');
+    
+    day.exercises.forEach(ex => {
+        let maxWeight = 0;
+        for(let i=0; i<ex.sets; i++) {
+            const w = parseFloat(document.getElementById(`w-${ex.id}-${i}`).value);
+            if (w > maxWeight) maxWeight = w;
+        }
+        
+        if (maxWeight > 0) {
+            if (!history[ex.name]) history[ex.name] = [];
+            history[ex.name].push({ date, weight: maxWeight });
+        }
+    });
+    
+    save();
+    alert('Trénink uložen do historie!');
 }
 
-function openPicker(id, row) { 
-  activePicker={id, row}; 
-  document.getElementById('pickOvl').classList.add('open'); 
-  // Jednoduchá simulace wheelu pro ukázku
-  let h = ''; for(let i=10;i<=200;i+=2.5) h+=`<div class="pick-item">${i}</div>`;
-  document.getElementById('wKg').innerHTML = h;
-  document.getElementById('wReps').innerHTML = h;
-}
-function closePicker() { document.getElementById('pickOvl').classList.remove('open'); }
+// --- STATS / CHART LOGIC ---
+function renderStats() {
+    const cont = document.getElementById('stats-container');
+    cont.innerHTML = '';
+    
+    const exercises = Object.keys(history);
+    if (exercises.length === 0) {
+        cont.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text3)">Zatím nemáš žádná data v historii.</p>';
+        return;
+    }
 
-function toast(m) {
-  const t = document.getElementById('toast');
-  t.textContent = m; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+    exercises.forEach(name => {
+        const data = history[name];
+        const canvasId = 'chart-' + name.replace(/\s+/g, '-');
+        cont.innerHTML += `
+            <div style="margin-top:20px; font-weight:800">${name}</div>
+            <div class="chart-container">
+                <canvas id="${canvasId}"></canvas>
+            </div>
+        `;
+        
+        setTimeout(() => {
+            new Chart(document.getElementById(canvasId), {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.date),
+                    datasets: [{
+                        label: 'Váha (kg)',
+                        data: data.map(d => d.weight),
+                        borderColor: '#FFD344',
+                        backgroundColor: 'rgba(255, 211, 68, 0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
+                        x: { grid: { display: false }, ticks: { color: '#666' } }
+                    }
+                }
+            });
+        }, 50);
+    });
 }
 
-function setDate() {
-  const n = new Date();
-  const D = ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'];
-  document.getElementById('hdrDate').textContent = D[n.getDay()] + ' ' + n.getDate() + '. ' + (n.getMonth()+1) + '.';
+// --- EDITOR LOGIC ---
+function renderEditor() {
+    const cont = document.getElementById('editor-container');
+    cont.innerHTML = '';
+    
+    plan.forEach((day, dIdx) => {
+        let exHtml = day.exercises.map((ex, eIdx) => `
+            <div class="editor-item">
+                <input class="editor-input" value="${ex.name}" onchange="updateEx(${dIdx}, ${eIdx}, 'name', this.value)" placeholder="Název cviku">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+                    <input class="editor-input" type="number" value="${ex.sets}" onchange="updateEx(${dIdx}, ${eIdx}, 'sets', this.value)" placeholder="Série">
+                    <input class="editor-input" value="${ex.reps}" onchange="updateEx(${dIdx}, ${eIdx}, 'reps', this.value)" placeholder="Opakování">
+                </div>
+                <input class="editor-input" value="${ex.video || ''}" onchange="updateEx(${dIdx}, ${eIdx}, 'video', this.value)" placeholder="Odkaz na video (URL)">
+                <button onclick="removeEx(${dIdx}, ${eIdx})" style="background:none; border:none; color:#ff4444; font-size:11px; font-weight:bold; cursor:pointer">SMAZAT CVIK</button>
+            </div>
+        `).join('');
+
+        cont.innerHTML += `
+            <div style="background:var(--surface); padding:15px; border-radius:20px; margin-bottom:20px; border:1px solid var(--border)">
+                <input class="editor-input" style="font-weight:bold; font-size:16px" value="${day.label}" onchange="plan[${dIdx}].label=this.value; save()">
+                ${exHtml}
+                <button class="btn-primary" style="background:var(--surface2); color:var(--text); font-size:12px; padding:10px" onclick="addEx(${dIdx})">+ Přidat cvik</button>
+                <button onclick="removeDay(${dIdx})" style="background:none; border:none; color:var(--text3); font-size:10px; width:100%; margin-top:10px; cursor:pointer">SMAZAT CELÝ DEN</button>
+            </div>
+        `;
+    });
 }
 
-setDate();
-renderDayTabs();
-renderDay(0);
+function updateEx(dIdx, eIdx, key, val) {
+    plan[dIdx].exercises[eIdx][key] = val;
+    save();
+}
+
+function addEx(dIdx) {
+    plan[dIdx].exercises.push({ id: 'ex_' + Date.now(), name: "Nový cvik", sets: 3, reps: "10", video: "" });
+    save();
+    renderEditor();
+}
+
+function removeEx(dIdx, eIdx) {
+    plan[dIdx].exercises.splice(eIdx, 1);
+    save();
+    renderEditor();
+}
+
+function addNewDay() {
+    plan.push({ label: "Nový den", exercises: [] });
+    save();
+    renderEditor();
+}
+
+function removeDay(idx) {
+    if(confirm('Opravdu smazat celý den?')) {
+        plan.splice(idx, 1);
+        save();
+        renderEditor();
+    }
+}
+
+// --- SETTINGS & EXPORT ---
+function toggleTheme() {
+    const b = document.body;
+    const isDark = b.getAttribute('data-theme') === 'dark';
+    b.setAttribute('data-theme', isDark ? 'light' : 'dark');
+}
+
+function exportData() {
+    const dataStr = JSON.stringify({ plan, history }, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "svalstats_export.json";
+    a.click();
+}
+
+function resetData() {
+    if(confirm('Opravdu smazat všechna data? Tato akce je nevratná.')) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+// --- INIT ---
+document.getElementById('hdrDate').innerText = new Date().toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
+renderWorkout();
 </script>
+
 </body>
 </html>
