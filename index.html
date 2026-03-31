@@ -82,7 +82,7 @@ body {
 .set-row { display: grid; grid-template-columns: 30px 1fr 1fr 45px; gap: 10px; margin-top: 10px; align-items: center; }
 .set-input { 
     background: var(--surface2); border: 1px solid var(--border); color: var(--text);
-    height: 45px; border-radius: 12px; text-align: center; font-weight: 600; font-family: inherit;
+    height: 45px; border-radius: 12px; text-align: center; font-weight: 600; font-family: inherit; width: 100%;
 }
 .btn-done { 
     height: 45px; border-radius: 12px; border: none; background: var(--surface2); 
@@ -105,15 +105,16 @@ body {
     width: 100%; padding: 16px; border-radius: 18px; background: var(--accent); 
     color: #000; border: none; font-weight: 800; cursor: pointer; margin-top: 10px;
 }
-.video-link { color: var(--accent); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+.video-link { color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 10px; }
 .chart-container { background: var(--surface2); border-radius: 15px; padding: 10px; margin-bottom: 20px; height: 200px; }
-.day-tabs { display: flex; gap: 8px; padding: 15px 20px; overflow-x: auto; }
-.day-tab { padding: 10px 20px; background: var(--surface2); border-radius: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; border: 1px solid var(--border); }
-.day-tab.active { background: var(--accent); color: #000; }
+.day-tabs { display: flex; gap: 8px; padding: 15px 20px; overflow-x: auto; scrollbar-width: none; }
+.day-tabs::-webkit-scrollbar { display: none; }
+.day-tab { padding: 10px 20px; background: var(--surface2); border-radius: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; border: 1px solid var(--border); color: var(--text2); }
+.day-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
 /* EDITOR STYLES */
 .editor-item { background: var(--surface2); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--border); }
-.editor-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 8px; margin-bottom: 5px; }
+.editor-input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 10px; margin-bottom: 8px; font-family: inherit; }
 </style>
 </head>
 <body data-theme="dark">
@@ -147,24 +148,47 @@ body {
     <button class="btn-primary" style="background: var(--surface2); color: var(--text)" onclick="toggleTheme()">Přepnout Tmavý / Světlý režim</button>
     
     <div class="section-label">Data a export</div>
-    <p style="font-size: 12px; color: var(--text2); margin-bottom: 10px;">Exportuj data pro analýzu tvou AI.</p>
     <button class="btn-primary" onclick="exportData()">Exportovat data (JSON)</button>
-    <button class="btn-primary" style="background: #ff4444; color: white" onclick="resetData()">Smazat všechna data</button>
+    <button class="btn-primary" style="background: #ff4444; color: white; margin-top: 40px" onclick="resetData()">Smazat všechna data</button>
   </div>
 </div>
 
 <nav class="bot-nav">
-  <div class="nav-it active" onclick="switchNav('workout', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg><div class="nav-lbl">Trénink</div></div>
-  <div class="nav-it" onclick="switchNav('stats', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><div class="nav-lbl">Rekordy</div></div>
-  <div class="nav-it" onclick="switchNav('editor', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><div class="nav-lbl">Editor</div></div>
-  <div class="nav-it" onclick="switchNav('settings', this)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><div class="nav-lbl">Nastavení</div></div>
+  <div class="nav-it active" id="nav-workout" onclick="switchNav('workout')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18L18 6M6 6l12 12"/></svg>
+    <div class="nav-lbl">Trénink</div>
+  </div>
+  <div class="nav-it" id="nav-stats" onclick="switchNav('stats')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    <div class="nav-lbl">Rekordy</div>
+  </div>
+  <div class="nav-it" id="nav-editor" onclick="switchNav('editor')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    <div class="nav-lbl">Editor</div>
+  </div>
+  <div class="nav-it" id="nav-settings" onclick="switchNav('settings')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <div class="nav-lbl">Nastavení</div>
+  </div>
 </nav>
 
 <script>
-// --- DATA ---
-let plan = JSON.parse(localStorage.getItem('ss_plan')) || [
-    { label: "Den 1", exercises: [{ id: "ex_1", name: "Benchpress", sets: 3, reps: "10", video: "https://youtube.com" }] }
+// --- ZÁKLADNÍ DATA ---
+const DEFAULT_PLAN = [
+    { label: "Den 1: Nohy + Biceps", exercises: [
+        { id: "ex_1", name: "Preacher curl", sets: 4, reps: "8-10", video: "" },
+        { id: "ex_2", name: "Hammer curl", sets: 3, reps: "10-12", video: "" },
+        { id: "ex_3", name: "Leg press", sets: 4, reps: "12", video: "" }
+    ]}
 ];
+
+let plan = JSON.parse(localStorage.getItem('ss_plan'));
+// MIGRACE DAT: Pokud je plán ve starém formátu nebo prázdný, resetujeme ho na default
+if (!plan || !plan[0] || plan[0].sections) { 
+    plan = DEFAULT_PLAN; 
+    localStorage.setItem('ss_plan', JSON.stringify(plan));
+}
+
 let history = JSON.parse(localStorage.getItem('ss_history')) || {}; 
 let curDayIdx = 0;
 
@@ -173,19 +197,23 @@ function save() {
     localStorage.setItem('ss_history', JSON.stringify(history));
 }
 
-// --- NAVIGATION ---
-function switchNav(viewId, el) {
+// --- NAVIGACE ---
+function switchNav(viewId) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.getElementById(viewId + '-view').classList.add('active');
-    document.querySelectorAll('.nav-it').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
     
+    document.querySelectorAll('.nav-it').forEach(n => n.classList.remove('active'));
+    document.getElementById('nav-' + viewId).classList.add('active');
+    
+    // Zobrazení tabů dnů jen v Tréninku
+    document.getElementById('dayTabs').style.display = (viewId === 'workout') ? 'flex' : 'none';
+
     if (viewId === 'stats') renderStats();
     if (viewId === 'editor') renderEditor();
     if (viewId === 'workout') renderWorkout();
 }
 
-// --- WORKOUT LOGIC ---
+// --- TRÉNINK ---
 function renderWorkout() {
     const tabs = document.getElementById('dayTabs');
     tabs.innerHTML = plan.map((day, i) => `
@@ -194,6 +222,12 @@ function renderWorkout() {
 
     const list = document.getElementById('exercise-list');
     const day = plan[curDayIdx];
+    
+    if (!day) {
+        list.innerHTML = '<p style="text-align:center; padding:40px">Žádný tréninkový den nenalezen.</p>';
+        return;
+    }
+
     list.innerHTML = `<div class="section-label">${day.label}</div>`;
     
     day.exercises.forEach(ex => {
@@ -201,21 +235,19 @@ function renderWorkout() {
             <div class="ex-card">
                 <div class="ex-hdr" onclick="toggleCard('${ex.id}')">
                     <div>
-                        <div style="font-weight:800">${ex.name}</div>
-                        <div style="font-size:12px; color:var(--text2)">${ex.sets} série po ${ex.reps}</div>
+                        <div style="font-weight:800; font-size:17px">${ex.name}</div>
+                        <div style="font-size:12px; color:var(--text2)">${ex.sets} série · ${ex.reps} opak.</div>
                     </div>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
                 </div>
                 <div class="ex-body" id="body-${ex.id}">
-                    <div style="margin-bottom: 15px">
-                        ${ex.video ? `<a href="${ex.video}" target="_blank" class="video-link">▶ Video návod</a>` : '<span style="font-size:12px;color:var(--text3)">Video není k dispozici</span>'}
-                    </div>
+                    ${ex.video ? `<a href="${ex.video}" target="_blank" class="video-link">▶ Video návod</a>` : ''}
                     <div id="sets-${ex.id}">
-                        ${Array.from({length: ex.sets}).map((_, i) => `
+                        ${Array.from({length: parseInt(ex.sets) || 0}).map((_, i) => `
                             <div class="set-row">
-                                <span style="font-size:12px; color:var(--text3)">${i+1}.</span>
+                                <span style="font-size:11px; color:var(--text3); font-weight:800">${i+1}</span>
                                 <input type="number" class="set-input" placeholder="kg" id="w-${ex.id}-${i}">
-                                <input type="number" class="set-input" placeholder="reps" id="r-${ex.id}-${i}">
+                                <input type="number" class="set-input" placeholder="op" id="r-${ex.id}-${i}">
                                 <button class="btn-done" onclick="this.classList.toggle('active')">✔</button>
                             </div>
                         `).join('')}
@@ -228,49 +260,58 @@ function renderWorkout() {
 
 function toggleCard(id) {
     const b = document.getElementById('body-' + id);
-    b.style.display = b.style.display === 'block' ? 'none' : 'block';
+    const all = document.querySelectorAll('.ex-body');
+    const wasOpen = b.style.display === 'block';
+    all.forEach(x => x.style.display = 'none');
+    if (!wasOpen) b.style.display = 'block';
 }
 
 function finishWorkout() {
     const day = plan[curDayIdx];
     const date = new Date().toLocaleDateString('cs-CZ');
+    let hasData = false;
     
     day.exercises.forEach(ex => {
         let maxWeight = 0;
-        for(let i=0; i<ex.sets; i++) {
-            const w = parseFloat(document.getElementById(`w-${ex.id}-${i}`).value);
+        for(let i=0; i < parseInt(ex.sets); i++) {
+            const wVal = document.getElementById(`w-${ex.id}-${i}`).value;
+            const w = parseFloat(wVal);
             if (w > maxWeight) maxWeight = w;
         }
         
         if (maxWeight > 0) {
             if (!history[ex.name]) history[ex.name] = [];
             history[ex.name].push({ date, weight: maxWeight });
+            hasData = true;
         }
     });
     
-    save();
-    alert('Trénink uložen do historie!');
+    if (hasData) {
+        save();
+        alert('Trénink uložen!');
+        switchNav('stats');
+    } else {
+        alert('Vyplň aspoň nějaké váhy!');
+    }
 }
 
-// --- STATS / CHART LOGIC ---
+// --- STATS / REKORDY ---
 function renderStats() {
     const cont = document.getElementById('stats-container');
     cont.innerHTML = '';
+    const keys = Object.keys(history);
     
-    const exercises = Object.keys(history);
-    if (exercises.length === 0) {
-        cont.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text3)">Zatím nemáš žádná data v historii.</p>';
+    if (keys.length === 0) {
+        cont.innerHTML = '<p style="text-align:center; padding:40px; color:var(--text3)">Zatím žádné rekordy.</p>';
         return;
     }
 
-    exercises.forEach(name => {
+    keys.forEach(name => {
         const data = history[name];
-        const canvasId = 'chart-' + name.replace(/\s+/g, '-');
+        const canvasId = 'chart-' + Math.random().toString(36).substr(2, 9);
         cont.innerHTML += `
-            <div style="margin-top:20px; font-weight:800">${name}</div>
-            <div class="chart-container">
-                <canvas id="${canvasId}"></canvas>
-            </div>
+            <div style="margin: 25px 0 10px; font-weight:800; font-size:16px">${name}</div>
+            <div class="chart-container"><canvas id="${canvasId}"></canvas></div>
         `;
         
         setTimeout(() => {
@@ -279,12 +320,14 @@ function renderStats() {
                 data: {
                     labels: data.map(d => d.date),
                     datasets: [{
-                        label: 'Váha (kg)',
                         data: data.map(d => d.weight),
                         borderColor: '#FFD344',
                         backgroundColor: 'rgba(255, 211, 68, 0.1)',
                         fill: true,
-                        tension: 0.3
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#FFD344'
                     }]
                 },
                 options: {
@@ -292,16 +335,16 @@ function renderStats() {
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
-                        x: { grid: { display: false }, ticks: { color: '#666' } }
+                        y: { beginAtZero: false, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', font: { size: 10 } } },
+                        x: { grid: { display: false }, ticks: { color: '#666', font: { size: 10 } } }
                     }
                 }
             });
-        }, 50);
+        }, 100);
     });
 }
 
-// --- EDITOR LOGIC ---
+// --- EDITOR ---
 function renderEditor() {
     const cont = document.getElementById('editor-container');
     cont.innerHTML = '';
@@ -314,17 +357,17 @@ function renderEditor() {
                     <input class="editor-input" type="number" value="${ex.sets}" onchange="updateEx(${dIdx}, ${eIdx}, 'sets', this.value)" placeholder="Série">
                     <input class="editor-input" value="${ex.reps}" onchange="updateEx(${dIdx}, ${eIdx}, 'reps', this.value)" placeholder="Opakování">
                 </div>
-                <input class="editor-input" value="${ex.video || ''}" onchange="updateEx(${dIdx}, ${eIdx}, 'video', this.value)" placeholder="Odkaz na video (URL)">
-                <button onclick="removeEx(${dIdx}, ${eIdx})" style="background:none; border:none; color:#ff4444; font-size:11px; font-weight:bold; cursor:pointer">SMAZAT CVIK</button>
+                <input class="editor-input" value="${ex.video || ''}" onchange="updateEx(${dIdx}, ${eIdx}, 'video', this.value)" placeholder="Odkaz na video (YouTube URL)">
+                <button onclick="removeEx(${dIdx}, ${eIdx})" style="background:none; border:none; color:#ff4444; font-size:11px; font-weight:800; cursor:pointer">SMAZAT CVIK</button>
             </div>
         `).join('');
 
         cont.innerHTML += `
-            <div style="background:var(--surface); padding:15px; border-radius:20px; margin-bottom:20px; border:1px solid var(--border)">
-                <input class="editor-input" style="font-weight:bold; font-size:16px" value="${day.label}" onchange="plan[${dIdx}].label=this.value; save()">
+            <div style="background:var(--surface); padding:18px; border-radius:24px; margin-bottom:20px; border:1px solid var(--border)">
+                <input class="editor-input" style="font-weight:900; font-size:18px; color:var(--accent)" value="${day.label}" onchange="plan[${dIdx}].label=this.value; save()">
                 ${exHtml}
-                <button class="btn-primary" style="background:var(--surface2); color:var(--text); font-size:12px; padding:10px" onclick="addEx(${dIdx})">+ Přidat cvik</button>
-                <button onclick="removeDay(${dIdx})" style="background:none; border:none; color:var(--text3); font-size:10px; width:100%; margin-top:10px; cursor:pointer">SMAZAT CELÝ DEN</button>
+                <button class="btn-primary" style="background:var(--surface2); color:var(--text); font-size:12px; padding:12px" onclick="addEx(${dIdx})">+ Přidat cvik</button>
+                <button onclick="removeDay(${dIdx})" style="background:none; border:none; color:var(--text3); font-size:10px; width:100%; margin-top:15px; cursor:pointer">SMAZAT CELÝ DEN</button>
             </div>
         `;
     });
@@ -354,18 +397,20 @@ function addNewDay() {
 }
 
 function removeDay(idx) {
-    if(confirm('Opravdu smazat celý den?')) {
+    if(confirm('Smazat celý den?')) {
         plan.splice(idx, 1);
         save();
         renderEditor();
     }
 }
 
-// --- SETTINGS & EXPORT ---
+// --- NASTAVENÍ ---
 function toggleTheme() {
     const b = document.body;
-    const isDark = b.getAttribute('data-theme') === 'dark';
-    b.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    const cur = b.getAttribute('data-theme');
+    const nxt = cur === 'dark' ? 'light' : 'dark';
+    b.setAttribute('data-theme', nxt);
+    localStorage.setItem('ss_theme', nxt);
 }
 
 function exportData() {
@@ -374,18 +419,22 @@ function exportData() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "svalstats_export.json";
+    a.download = `svalstats_data_${new Date().toISOString().slice(0,10)}.json`;
     a.click();
 }
 
 function resetData() {
-    if(confirm('Opravdu smazat všechna data? Tato akce je nevratná.')) {
+    if(confirm('OPRAVDU SMAZAT VŠE?')) {
         localStorage.clear();
         location.reload();
     }
 }
 
-// --- INIT ---
+// --- START ---
+// Načtení tématu
+const savedTheme = localStorage.getItem('ss_theme') || 'dark';
+document.body.setAttribute('data-theme', savedTheme);
+
 document.getElementById('hdrDate').innerText = new Date().toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
 renderWorkout();
 </script>
