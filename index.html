@@ -23,112 +23,80 @@
     --text2: #888888;
     --text3: #555555;
     --radius: 20px;
+    --danger: #ff4444;
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  
-  html, body { 
-    height: 100%; width: 100%; overflow: hidden; 
-    background: var(--bg); position: fixed;
-  }
+  html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg); position: fixed; }
+  body { font-family: 'DM Sans', sans-serif; color: var(--text); display: flex; flex-direction: column; max-width: 500px; margin: 0 auto; }
 
-  body { 
-    font-family: 'DM Sans', sans-serif; color: var(--text); 
-    display: flex; flex-direction: column; max-width: 500px; margin: 0 auto; 
-  }
+  /* HEADER */
+  .header { padding: calc(45px + env(safe-area-inset-top)) 20px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--accent); }
+  .header-date { font-size: 13px; color: var(--text2); text-align: right; white-space: pre-line; line-height: 1.2; }
 
-/* HEADER */
-.header { 
-    padding: calc(45px + env(safe-area-inset-top)) 20px 16px; 
-    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; 
-}
-.logo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--accent); }
-.header-date { font-size: 13px; color: var(--text2); text-align: right; white-space: pre-line; line-height: 1.2; }
+  /* DAY TABS */
+  .day-tabs { display: flex; padding: 0 20px 16px; gap: 10px; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; }
+  .day-tabs::-webkit-scrollbar { display: none; }
+  .day-tab { flex-shrink: 0; padding: 12px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; background: var(--surface2); color: var(--text2); cursor: pointer; border: 1px solid var(--border); }
+  .day-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-/* DAY TABS */
-.day-tabs { display: flex; padding: 0 20px 16px; gap: 10px; flex-shrink: 0; }
-.day-tab { 
-    flex: 1; padding: 14px 0; border-radius: 14px; font-size: 14px; font-weight: 700; 
-    background: var(--surface2); color: var(--text2); cursor: pointer; 
-    border: 1px solid var(--border); text-align: center; transition: 0.2s;
-}
-.day-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+  /* SCROLL AREA */
+  .scroll-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 120px; }
+  .scroll-area::-webkit-scrollbar { display: none; }
+  .view { display: none; padding: 0 20px; }
+  .view.active { display: block; }
 
-/* SCROLL AREA */
-.scroll-area { 
-    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; 
-    scrollbar-width: none; padding-bottom: 120px;
-}
-.scroll-area::-webkit-scrollbar { display: none; }
+  .muscle-label { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: var(--text3); margin: 24px 0 12px; display: flex; justify-content: space-between; align-items: center; }
 
-.view { display: none; padding: 0 20px; }
-.view.active { display: block; }
+  /* CARDS */
+  .exercise-card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px; overflow: hidden; }
+  .exercise-card.expanded { border-color: var(--accent); }
+  .exercise-header { display: flex; align-items: center; padding: 18px 20px; cursor: pointer; gap: 14px; }
+  .exercise-info { flex: 1; min-width: 0; }
+  .exercise-name { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
 
-.muscle-label { 
-    font-family: 'Bebas Neue', sans-serif; font-size: 18px; 
-    letter-spacing: 2px; color: var(--text3); margin: 24px 0 12px; 
-}
+  .pr-badge { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--accent); background: rgba(255, 211, 68, 0.1); padding: 4px 10px; border-radius: 100px; }
+  .current-weight { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px; }
 
-/* CARDS */
-.exercise-card { 
-    background: var(--surface); border-radius: var(--radius); 
-    border: 1px solid var(--border); margin-bottom: 12px; overflow: hidden; 
-}
-.exercise-card.expanded { border-color: var(--accent); }
-.exercise-header { display: flex; align-items: center; padding: 18px 20px; cursor: pointer; gap: 14px; }
-.exercise-info { flex: 1; min-width: 0; }
-.exercise-name { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+  /* VIDEO INPUT IN TRAINING */
+  .video-link-area { margin-top: 15px; display: flex; gap: 8px; align-items: center; background: var(--surface3); padding: 10px; border-radius: 12px; }
+  .video-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 12px; outline: none; }
 
-.pr-badge { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--accent); background: rgba(255, 211, 68, 0.1); padding: 4px 10px; border-radius: 100px; }
-.current-weight { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px; }
+  /* SERIES ROW */
+  .series-row { display: grid; grid-template-columns: 40px 1fr 1fr 40px; gap: 12px; margin-bottom: 10px; align-items: center; }
+  .series-input { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 0; color: var(--text); text-align: center; font-size: 16px; font-weight: 600; }
+  .series-done-btn { width: 40px; height: 40px; border-radius: 12px; background: var(--surface3); border: none; color: var(--text3); display: flex; align-items: center; justify-content: center; }
+  .series-done-btn.done { background: var(--accent); color: #000; }
 
-/* SERIES ROW */
-.series-row { 
-    display: grid; grid-template-columns: 40px 1fr 1fr 40px; 
-    gap: 12px; margin-bottom: 10px; align-items: center; 
-}
-.series-input { 
-    background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; 
-    padding: 12px 0; color: var(--text); text-align: center; font-size: 16px; font-weight: 600;
-}
-.series-done-btn { 
-    width: 40px; height: 40px; border-radius: 12px; background: var(--surface3); 
-    border: none; color: var(--text3); display: flex; align-items: center; justify-content: center; 
-}
-.series-done-btn.done { background: var(--accent); color: #000; }
+  /* EDITOR */
+  .editor-item { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .editor-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px; color: #fff; font-size: 14px; margin-bottom: 8px; }
+  .btn-small { padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+  .btn-add-sub { background: var(--surface3); color: var(--text2); }
+  .btn-del { background: rgba(255, 68, 68, 0.1); color: var(--danger); }
 
-/* EDITOR INPUTS */
-.editor-group { background: var(--surface); padding: 15px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 15px; }
-.edit-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: white; padding: 10px; margin-bottom: 8px; font-family: inherit; font-size: 14px; }
-.edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  /* BOTTOM NAV */
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding-top: 12px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 1000; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--text3); cursor: pointer; }
+  .nav-icon { width: 24px; height: 24px; }
+  .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+  .nav-item.active { color: var(--accent); }
 
-/* BOTTOM NAV */
-.bottom-nav { 
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); 
-    border-top: 1px solid var(--border); display: flex; padding-top: 12px; 
-    padding-bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 1000; 
-}
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--text3); cursor: pointer; }
-.nav-icon { width: 24px; height: 24px; }
-.nav-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
-.nav-item.active { color: var(--accent); }
+  /* WHEEL PICKER */
+  .picker-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: flex-end; }
+  .picker-overlay.open { display: flex; }
+  .picker-modal { background: var(--surface); border-radius: 30px 30px 0 0; width: 100%; max-width: 500px; margin: 0 auto; padding: 24px 24px calc(40px + env(safe-area-inset-bottom)); }
+  .picker-wheels { display: grid; grid-template-columns: 1fr 1fr; height: 200px; position: relative; overflow: hidden; background: var(--surface2); border-radius: 20px; margin-top: 20px; }
+  .picker-wheel { overflow-y: auto; scroll-snap-type: y mandatory; text-align: center; scrollbar-width: none; }
+  .picker-wheel::-webkit-scrollbar { display: none; }
+  .picker-item { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px; scroll-snap-align: center; color: var(--text); font-weight: 600; }
+  .picker-highlight { position: absolute; top: 70px; left: 0; right: 0; height: 60px; border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); pointer-events: none; background: rgba(255, 211, 68, 0.05); }
 
-/* WHEEL PICKER */
-.picker-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: flex-end; }
-.picker-overlay.open { display: flex; }
-.picker-modal { background: var(--surface); border-radius: 30px 30px 0 0; width: 100%; max-width: 500px; margin: 0 auto; padding: 24px 24px calc(40px + env(safe-area-inset-bottom)); }
-.picker-wheels { display: grid; grid-template-columns: 1fr 1fr; height: 200px; position: relative; overflow: hidden; background: var(--surface2); border-radius: 20px; margin-top: 20px; }
-.picker-wheel { overflow-y: auto; scroll-snap-type: y mandatory; text-align: center; scrollbar-width: none; }
-.picker-wheel::-webkit-scrollbar { display: none; }
-.picker-item { height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px; scroll-snap-align: center; color: var(--text); font-weight: 600; }
-.picker-highlight { position: absolute; top: 70px; left: 0; right: 0; height: 60px; border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); pointer-events: none; background: rgba(255, 211, 68, 0.05); }
-
-/* BUTTONS & TOAST */
-.btn-add { background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 16px; font-weight: 800; width: 100%; font-size: 16px; margin-top: 20px; }
-.toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 700; opacity: 0; transition: 0.3s; z-index: 3000; }
-.toast.show { opacity: 1; }
-.graph-container { height: 180px; margin: 10px 0; background: var(--surface2); border-radius: 16px; padding: 10px; border: 1px solid var(--border); }
+  .btn-add { background: var(--accent); color: #000; border: none; padding: 18px; border-radius: 16px; font-weight: 800; width: 100%; font-size: 16px; margin-top: 20px; }
+  .toast { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #000; padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 700; opacity: 0; transition: 0.3s; z-index: 3000; pointer-events: none; }
+  .toast.show { opacity: 1; }
+  .graph-container { height: 180px; margin: 10px 0; background: var(--surface2); border-radius: 16px; padding: 10px; border: 1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -138,17 +106,10 @@
   <div class="header-date" id="headerDate"></div>
 </div>
 
-<div class="day-tabs" id="mainTabs">
-  <div class="day-tab active" onclick="switchDay(0)">DEN 1</div>
-  <div class="day-tab" onclick="switchDay(1)">DEN 2</div>
-  <div class="day-tab" onclick="switchDay(2)">DEN 3</div>
-</div>
+<div class="day-tabs" id="mainTabs"></div>
 
 <div class="scroll-area" id="mainScroll">
-  <div id="day-0" class="view active"></div>
-  <div id="day-1" class="view"></div>
-  <div id="day-2" class="view"></div>
-  
+  <div id="workout-container"></div>
   <div id="stats-view" class="view"><div class="muscle-label">REKORDY</div><div id="stats-content"></div></div>
   <div id="editor-view" class="view"><div class="muscle-label">EDITOR PLÁNU</div><div id="editor-content"></div></div>
 </div>
@@ -188,22 +149,10 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const DEFAULT_PLAN = [
-  { id: 0, label: "Den 1: Nohy + Biceps", sections: [
-    { label: "BICEPS", exercises: [ { id: 'ex1', name:'Preacher curl', sets:4, reps:'8-10', video:'' }, { id: 'ex2', name:'Hammer curl', sets:3, reps:'10-12', video:'' }, { id: 'ex3', name:'Incline dumbbell curl', sets:3, reps:'10-12', video:'' } ] },
-    { label: "NOHY", exercises: [ { id: 'ex4', name:'Leg press', sets:4, reps:'12', video:'' }, { id: 'ex5', name:'Lying leg curl', sets:3, reps:'10-12', video:'' }, { id: 'ex6', name:'Calf raises', sets:3, reps:'20', video:'' } ] }
-  ]},
-  { id: 1, label: "Den 2: Záda + Ramena", sections: [
-    { label: "ZÁDA", exercises: [ { id: 'ex7', name:'Lat pulldown', sets:4, reps:'12', video:'' }, { id: 'ex8', name:'Cable row', sets:4, reps:'10', video:'' }, { id: 'ex9', name:'Hyperextenze', sets:3, reps:'12-15', video:'' } ] },
-    { label: "RAMENA", exercises: [ { id: 'ex10', name:'Shoulder press', sets:4, reps:'10', video:'' }, { id: 'ex11', name:'Arnold press', sets:3, reps:'12', video:'' }, { id: 'ex12', name:'Reverse fly', sets:3, reps:'12', video:'' } ] }
-  ]},
-  { id: 2, label: "Den 3: Hrudník + Triceps", sections: [
-    { label: "HRUDNÍK", exercises: [ { id: 'ex13', name:'Bench press', sets:4, reps:'12', video:'' }, { id: 'ex14', name:'Peck deck', sets:3, reps:'10', video:'' }, { id: 'ex15', name:'Incline dumbell press', sets:3, reps:'12-15', video:'' } ] },
-    { label: "TRICEPS", exercises: [ { id: 'ex16', name:'Overhead DB extension', sets:3, reps:'10', video:'' }, { id: 'ex17', name:'Dumbbell kickbacks', sets:3, reps:'12', video:'' }, { id: 'ex18', name:'Cable triceps pushdown', sets:4, reps:'12', video:'' } ] }
-  ]}
+let currentDayIdx = 0;
+let workoutPlan = JSON.parse(localStorage.getItem('ss_plan')) || [
+  { id: Date.now(), label: "Den 1", sections: [{ label: "HRUDNÍK", exercises: [{ id: 'ex_'+Date.now(), name:'Bench Press', sets:4, reps:'10', video:'' }] }] }
 ];
-
-let workoutPlan = JSON.parse(localStorage.getItem('ss_plan')) || DEFAULT_PLAN;
 let state = JSON.parse(localStorage.getItem('ss_state')) || {};
 let prData = JSON.parse(localStorage.getItem('ss_pr')) || {};
 let statsCharts = {};
@@ -215,50 +164,73 @@ function saveAll() {
 }
 
 function renderApp() {
-  workoutPlan.forEach(day => {
-    const container = document.getElementById('day-' + day.id);
-    if(!container) return;
-    let html = `<div class="muscle-label" style="font-size:24px; color:var(--accent); margin-bottom:20px;">${day.label.toUpperCase()}</div>`;
-    day.sections.forEach(sec => {
-      html += `<div class="muscle-section"><div class="muscle-label">${sec.label}</div>`;
-      sec.exercises.forEach(ex => {
-        const pr = prData[ex.id] || '—';
-        const hist = state[ex.id]?.history || [];
-        const lastWeight = hist.length > 0 ? hist[hist.length-1].maxWeight : '—';
-        
-        // Přidání ikony videa pokud existuje URL
-        const videoBtn = ex.video ? `<a href="${ex.video}" target="_blank" style="color:var(--accent);"><i data-lucide="video" style="width:16px;"></i></a>` : '';
+  const tabs = document.getElementById('mainTabs');
+  const container = document.getElementById('workout-container');
+  
+  // Render Tabs
+  tabs.innerHTML = workoutPlan.map((day, idx) => `
+    <div class="day-tab ${currentDayIdx === idx ? 'active' : ''}" onclick="switchDay(${idx})">${day.label.toUpperCase()}</div>
+  `).join('');
 
-        html += `
-          <div id="card-${ex.id}" class="exercise-card">
-            <div class="exercise-header" onclick="toggleCard('${ex.id}')">
-              <div class="exercise-info">
-                <div class="exercise-name">${ex.name} ${videoBtn}</div>
-                <div style="font-size:12px; color:var(--text2)">${ex.sets} série / ${ex.reps} reps</div>
-              </div>
-              <div style="text-align:right">
-                <div class="pr-badge"><i data-lucide="trophy" style="width:12px"></i> <span>${pr}</span></div>
-                <div class="current-weight">${lastWeight} <span style="font-size:12px; color:var(--text2)">kg</span></div>
-              </div>
-            </div>
-            <div class="exercise-body" id="body-${ex.id}" style="display:none; padding:0 20px 20px; border-top:1px solid var(--border)">
-              <div id="rows-${ex.id}" style="margin-top:15px;"></div>
-            </div>
-          </div>`;
-      });
-      html += `</div>`;
-    });
-    html += `<button class="btn-add" onclick="finishWorkout(${day.id})">DOKONČIT TRÉNINK</button>`;
-    container.innerHTML = html;
-  });
+  // Render Workout View
+  container.innerHTML = workoutPlan.map((day, idx) => `
+    <div id="day-view-${idx}" class="view ${currentDayIdx === idx ? 'active' : ''}">
+      <div class="muscle-label" style="font-size:24px; color:var(--accent); margin-bottom:20px;">${day.label.toUpperCase()}</div>
+      ${day.sections.map(sec => `
+        <div class="muscle-section">
+          <div class="muscle-label">${sec.label}</div>
+          ${sec.exercises.map(ex => {
+            const pr = prData[ex.id] || '—';
+            const hist = state[ex.id]?.history || [];
+            const lastWeight = hist.length > 0 ? hist[hist.length-1].maxWeight : '—';
+            return `
+              <div id="card-${ex.id}" class="exercise-card">
+                <div class="exercise-header" onclick="toggleCard('${ex.id}')">
+                  <div class="exercise-info">
+                    <div class="exercise-name">${ex.name} ${ex.video ? `<i data-lucide="video" style="width:14px; color:var(--accent)"></i>` : ''}</div>
+                    <div style="font-size:12px; color:var(--text2)">${ex.sets} série / ${ex.reps} reps</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div class="pr-badge"><i data-lucide="trophy" style="width:12px"></i> <span>${pr}</span></div>
+                    <div class="current-weight">${lastWeight} <span style="font-size:12px; color:var(--text2)">kg</span></div>
+                  </div>
+                </div>
+                <div class="exercise-body" id="body-${ex.id}" style="display:none; padding:0 20px 20px; border-top:1px solid var(--border)">
+                  <div class="video-link-area">
+                    <i data-lucide="link" style="width:14px; color:var(--text3)"></i>
+                    <input type="text" class="video-input" placeholder="Vložte URL videa (YouTube...)" 
+                           value="${ex.video || ''}" onchange="updateVideo('${ex.id}', this.value)">
+                    ${ex.video ? `<a href="${ex.video}" target="_blank" style="color:var(--accent)"><i data-lucide="external-link" style="width:16px"></i></a>` : ''}
+                  </div>
+                  <div id="rows-${ex.id}" style="margin-top:15px;"></div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      `).join('')}
+      <button class="btn-add" onclick="finishWorkout(${idx})">DOKONČIT TRÉNINK</button>
+    </div>
+  `).join('');
   lucide.createIcons();
+}
+
+function updateVideo(exId, val) {
+  workoutPlan.forEach(d => d.sections.forEach(s => s.exercises.forEach(ex => {
+    if(ex.id === exId) ex.video = val;
+  })));
+  saveAll();
+  renderApp();
 }
 
 function buildRows(id) {
   const container = document.getElementById('rows-'+id);
-  const ex = workoutPlan.flatMap(d => d.sections).flatMap(s => s.exercises).find(e => e.id === id);
+  let targetEx = null;
+  workoutPlan.forEach(d => d.sections.forEach(s => s.exercises.forEach(ex => { if(ex.id === id) targetEx = ex; })));
+  
   if (!state[id]) state[id] = { rows: [], history: [] };
-  if (state[id].rows.length === 0) state[id].rows = Array.from({length: parseInt(ex.sets)}, () => ({weight: '', reps: '', done: false}));
+  if (state[id].rows.length === 0) {
+    state[id].rows = Array.from({length: parseInt(targetEx.sets) || 1}, () => ({weight: '', reps: '', done: false}));
+  }
   
   container.innerHTML = `<div style="display:grid; grid-template-columns:40px 1fr 1fr 40px; font-size:11px; color:var(--text3); margin-bottom:8px; text-align:center;"><span>SET</span><span>KG</span><span>REPS</span><span>OK</span></div>`;
   state[id].rows.forEach((row, i) => {
@@ -303,8 +275,8 @@ function toggleCard(id) {
 
 function toggleDone(id, idx) { state[id].rows[idx].done = !state[id].rows[idx].done; saveAll(); buildRows(id); }
 
-function finishWorkout(dayId) {
-    workoutPlan[dayId].sections.forEach(s => s.exercises.forEach(ex => {
+function finishWorkout(dayIdx) {
+    workoutPlan[dayIdx].sections.forEach(s => s.exercises.forEach(ex => {
         const sData = state[ex.id];
         if(sData && sData.rows.some(r => r.done)) {
             const max = Math.max(...sData.rows.filter(r => r.done).map(r => parseFloat(r.weight) || 0));
@@ -319,12 +291,13 @@ function switchNav(tab) {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('nav-'+tab).classList.add('active');
     document.getElementById('mainTabs').style.display = tab === 'workout' ? 'flex' : 'none';
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    if(tab === 'workout') { switchDay(0); } else { document.getElementById(tab+'-view').classList.add('active'); if(tab === 'stats') buildStats(); if(tab === 'editor') renderEditor(); }
+    if(tab === 'workout') { switchDay(currentDayIdx); } else { document.getElementById(tab+'-view').classList.add('active'); if(tab === 'stats') buildStats(); if(tab === 'editor') renderEditor(); }
 }
 
 function switchDay(d) {
-    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.day-tab')[d].classList.add('active');
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active')); document.getElementById('day-'+d).classList.add('active');
+    currentDayIdx = d;
+    document.querySelectorAll('.day-tab').forEach((t, i) => t.classList.toggle('active', i === d));
+    document.querySelectorAll('#workout-container .view').forEach((v, i) => v.classList.toggle('active', i === d));
 }
 
 // REKORDY
@@ -372,48 +345,59 @@ function renderStatsChart(id) {
     });
 }
 
-// EDITOR - OPRAVENÁ A FUNKČNÍ VERZE
+// EDITOR - S MOŽNOSTÍ PŘIDÁVÁNÍ
 function renderEditor() {
     const cont = document.getElementById('editor-content');
     let html = '';
     
     workoutPlan.forEach((day, dIdx) => {
-        html += `<div class="muscle-label" style="color:var(--accent); margin-top:10px;">${day.label}</div>`;
-        
-        day.sections.forEach((sec, sIdx) => {
-            html += `<div style="font-size:12px; color:var(--text3); margin-bottom:10px; margin-top:20px; letter-spacing:1px;">${sec.label}</div>`;
-            
-            sec.exercises.forEach((ex, eIdx) => {
-                html += `
-                <div class="editor-group">
-                    <input type="text" class="edit-input" placeholder="Název cviku" value="${ex.name}" 
-                        oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'name', this.value)">
-                    
-                    <div class="edit-row">
-                        <input type="text" class="edit-input" placeholder="Série" value="${ex.sets}" 
-                            oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'sets', this.value)">
-                        <input type="text" class="edit-input" placeholder="Opakování" value="${ex.reps}" 
-                            oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'reps', this.value)">
+        html += `
+        <div class="editor-item" style="border-left: 4px solid var(--accent)">
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="text" class="editor-input" style="font-weight:bold; color:var(--accent)" value="${day.label}" onchange="editDay(${dIdx}, this.value)">
+                <button class="btn-small btn-del" onclick="deleteDay(${dIdx})"><i data-lucide="trash-2" style="width:14px"></i></button>
+            </div>
+            ${day.sections.map((sec, sIdx) => `
+                <div style="margin-left: 15px; margin-bottom: 20px; border-left: 2px solid var(--border); padding-left: 15px;">
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input type="text" class="editor-input" style="font-size:12px; color:var(--text2)" value="${sec.label}" onchange="editSec(${dIdx}, ${sIdx}, this.value)">
+                        <button class="btn-small btn-del" onclick="deleteSec(${dIdx}, ${sIdx})"><i data-lucide="x" style="width:12px"></i></button>
                     </div>
-                    
-                    <input type="text" class="edit-input" placeholder="Video URL (YouTube)" value="${ex.video || ''}" 
-                        oninput="updatePlan(${dIdx}, ${sIdx}, ${eIdx}, 'video', this.value)">
-                </div>`;
-            });
-        });
+                    ${sec.exercises.map((ex, eIdx) => `
+                        <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:10px; background:var(--surface2); padding:10px; border-radius:10px;">
+                            <input type="text" class="editor-input" style="margin:0" value="${ex.name}" onchange="editEx(${dIdx}, ${sIdx}, ${eIdx}, 'name', this.value)">
+                            <div style="display:flex; gap:5px;">
+                                <input type="text" class="editor-input" style="margin:0; flex:1" placeholder="Série" value="${ex.sets}" onchange="editEx(${dIdx}, ${sIdx}, ${eIdx}, 'sets', this.value)">
+                                <input type="text" class="editor-input" style="margin:0; flex:1" placeholder="Opak." value="${ex.reps}" onchange="editEx(${dIdx}, ${sIdx}, ${eIdx}, 'reps', this.value)">
+                                <button class="btn-small btn-del" onclick="deleteEx(${dIdx}, ${sIdx}, ${eIdx})"><i data-lucide="trash" style="width:12px"></i></button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <button class="btn-small btn-add-sub" onclick="addEx(${dIdx}, ${sIdx})"><i data-lucide="plus" style="width:12px"></i> PŘIDAT CVIK</button>
+                </div>
+            `).join('')}
+            <button class="btn-small btn-add-sub" style="margin-top:10px; background:var(--accent); color:#000" onclick="addSec(${dIdx})"><i data-lucide="layers" style="width:12px"></i> PŘIDAT SEKCI</button>
+        </div>`;
     });
     
-    html += `<button class="btn-add" onclick="if(confirm('Resetovat vše do továrního nastavení?')){localStorage.clear();location.reload()}" style="background:none; border:1px solid #ff4444; color:#ff4444; margin-bottom:40px;">SMAZAT VEŠKERÁ DATA</button>`;
+    html += `<button class="btn-add" onclick="addDay()"><i data-lucide="calendar-plus" style="width:18px"></i> PŘIDAT NOVÝ DEN</button>`;
+    html += `<button class="btn-add" onclick="if(confirm('Opravdu smazat vše?')){localStorage.clear();location.reload()}" style="background:none; border:1px solid var(--danger); color:var(--danger); margin-top:10px;">RESET DO TOVÁRNÍHO NASTAVENÍ</button>`;
     cont.innerHTML = html;
+    lucide.createIcons();
 }
 
-function updatePlan(dIdx, sIdx, eIdx, field, value) {
-    workoutPlan[dIdx].sections[sIdx].exercises[eIdx][field] = value;
-    saveAll();
-    // Nechceme překreslovat celý editor při každém stisku klávesy (input lag), 
-    // ale musíme zajistit že se změny projeví v tréninkovém view
-    setTimeout(renderApp, 100); 
-}
+// EDITOR ACTIONS
+function addDay() { workoutPlan.push({ id: Date.now(), label: "Nový Den", sections: [] }); saveAll(); renderEditor(); renderApp(); }
+function deleteDay(idx) { if(confirm('Smazat celý den?')) { workoutPlan.splice(idx, 1); if(currentDayIdx >= workoutPlan.length) currentDayIdx = 0; saveAll(); renderEditor(); renderApp(); } }
+function editDay(idx, val) { workoutPlan[idx].label = val; saveAll(); renderApp(); }
+
+function addSec(dIdx) { workoutPlan[dIdx].sections.push({ label: "NOVÁ SEKCE", exercises: [] }); saveAll(); renderEditor(); renderApp(); }
+function deleteSec(dIdx, sIdx) { workoutPlan[dIdx].sections.splice(sIdx, 1); saveAll(); renderEditor(); renderApp(); }
+function editSec(dIdx, sIdx, val) { workoutPlan[dIdx].sections[sIdx].label = val; saveAll(); renderApp(); }
+
+function addEx(dIdx, sIdx) { workoutPlan[dIdx].sections[sIdx].exercises.push({ id: 'ex_'+Date.now(), name: "Nový Cvik", sets: 3, reps: "10", video: "" }); saveAll(); renderEditor(); renderApp(); }
+function deleteEx(dIdx, sIdx, eIdx) { workoutPlan[dIdx].sections[sIdx].exercises.splice(eIdx, 1); saveAll(); renderEditor(); renderApp(); }
+function editEx(dIdx, sIdx, eIdx, field, val) { workoutPlan[dIdx].sections[sIdx].exercises[eIdx][field] = val; saveAll(); renderApp(); }
 
 function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000); }
 function setDate() { 
