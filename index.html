@@ -27,23 +27,59 @@
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; width: 100%; overflow: hidden; background: var(--bg); position: fixed; }
-  body { font-family: 'DM Sans', sans-serif; color: var(--text); display: flex; flex-direction: column; max-width: 500px; margin: 0 auto; }
+  
+  /* OPRAVA: Dynamická výška pro mobily */
+  html, body { 
+    height: 100dvh; 
+    width: 100%; 
+    overflow: hidden; 
+    background: var(--bg); 
+  }
+  
+  body { 
+    font-family: 'DM Sans', sans-serif; 
+    color: var(--text); 
+    display: flex; 
+    flex-direction: column; 
+    max-width: 500px; 
+    margin: 0 auto; 
+    position: relative;
+  }
 
   /* HEADER */
-  .header { padding: calc(45px + env(safe-area-inset-top)) 20px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .header { 
+    padding: calc(45px + env(safe-area-inset-top)) 20px 16px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    flex-shrink: 0; 
+  }
   .logo { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--accent); }
   .header-date { font-size: 13px; color: var(--text2); text-align: right; white-space: pre-line; line-height: 1.2; }
 
   /* DAY TABS */
-  .day-tabs { display: flex; padding: 0 20px 16px; gap: 10px; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; }
+  .day-tabs { 
+    display: flex; 
+    padding: 0 20px 16px; 
+    gap: 10px; 
+    flex-shrink: 0; 
+    overflow-x: auto; 
+    scrollbar-width: none; 
+  }
   .day-tabs::-webkit-scrollbar { display: none; }
   .day-tab { flex-shrink: 0; padding: 12px 20px; border-radius: 14px; font-size: 13px; font-weight: 700; background: var(--surface2); color: var(--text2); cursor: pointer; border: 1px solid var(--border); }
   .day-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-  /* SCROLL AREA */
-  .scroll-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 120px; }
+  /* HLAVNÍ SKROLOVACÍ OBLAST - Zajišťuje, že uvidíš všechno */
+  .scroll-area { 
+    flex: 1; 
+    overflow-y: auto; 
+    -webkit-overflow-scrolling: touch; 
+    padding-bottom: 140px; /* Dostatek místa nad navigací */
+    width: 100%;
+  }
   .scroll-area::-webkit-scrollbar { display: none; }
+
   .view { display: none; padding: 0 20px; }
   .view.active { display: block; }
 
@@ -59,7 +95,7 @@
   .pr-badge { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--accent); background: rgba(255, 211, 68, 0.1); padding: 4px 10px; border-radius: 100px; }
   .current-weight { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px; }
 
-  /* VIDEO INPUT IN TRAINING */
+  /* VIDEO INPUT */
   .video-link-area { margin-top: 15px; display: flex; gap: 8px; align-items: center; background: var(--surface3); padding: 10px; border-radius: 12px; }
   .video-input { flex: 1; background: transparent; border: none; color: var(--text); font-size: 12px; outline: none; }
 
@@ -76,14 +112,28 @@
   .btn-add-sub { background: var(--surface3); color: var(--text2); }
   .btn-del { background: rgba(255, 68, 68, 0.1); color: var(--danger); }
 
-  /* BOTTOM NAV */
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding-top: 12px; padding-bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 1000; }
+  /* BOTTOM NAV - Fixovaná k dolnímu okraji viewportu */
+  .bottom-nav { 
+    position: fixed; 
+    bottom: 0; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 500px;
+    background: rgba(10, 10, 10, 0.95); 
+    backdrop-filter: blur(20px); 
+    border-top: 1px solid var(--border); 
+    display: flex; 
+    padding-top: 12px; 
+    padding-bottom: calc(20px + env(safe-area-inset-bottom)); 
+    z-index: 1000; 
+  }
   .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: var(--text3); cursor: pointer; }
   .nav-icon { width: 24px; height: 24px; }
   .nav-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
   .nav-item.active { color: var(--accent); }
 
-  /* WHEEL PICKER */
+  /* PICKER */
   .picker-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: flex-end; }
   .picker-overlay.open { display: flex; }
   .picker-modal { background: var(--surface); border-radius: 30px 30px 0 0; width: 100%; max-width: 500px; margin: 0 auto; padding: 24px 24px calc(40px + env(safe-area-inset-bottom)); }
@@ -167,12 +217,10 @@ function renderApp() {
   const tabs = document.getElementById('mainTabs');
   const container = document.getElementById('workout-container');
   
-  // Render Tabs
   tabs.innerHTML = workoutPlan.map((day, idx) => `
     <div class="day-tab ${currentDayIdx === idx ? 'active' : ''}" onclick="switchDay(${idx})">${day.label.toUpperCase()}</div>
   `).join('');
 
-  // Render Workout View
   container.innerHTML = workoutPlan.map((day, idx) => `
     <div id="day-view-${idx}" class="view ${currentDayIdx === idx ? 'active' : ''}">
       <div class="muscle-label" style="font-size:24px; color:var(--accent); margin-bottom:20px;">${day.label.toUpperCase()}</div>
@@ -198,7 +246,7 @@ function renderApp() {
                 <div class="exercise-body" id="body-${ex.id}" style="display:none; padding:0 20px 20px; border-top:1px solid var(--border)">
                   <div class="video-link-area">
                     <i data-lucide="link" style="width:14px; color:var(--text3)"></i>
-                    <input type="text" class="video-input" placeholder="Vložte URL videa (YouTube...)" 
+                    <input type="text" class="video-input" placeholder="Vložte URL videa" 
                            value="${ex.video || ''}" onchange="updateVideo('${ex.id}', this.value)">
                     ${ex.video ? `<a href="${ex.video}" target="_blank" style="color:var(--accent)"><i data-lucide="external-link" style="width:16px"></i></a>` : ''}
                   </div>
@@ -226,12 +274,10 @@ function buildRows(id) {
   const container = document.getElementById('rows-'+id);
   let targetEx = null;
   workoutPlan.forEach(d => d.sections.forEach(s => s.exercises.forEach(ex => { if(ex.id === id) targetEx = ex; })));
-  
   if (!state[id]) state[id] = { rows: [], history: [] };
   if (state[id].rows.length === 0) {
     state[id].rows = Array.from({length: parseInt(targetEx.sets) || 1}, () => ({weight: '', reps: '', done: false}));
   }
-  
   container.innerHTML = `<div style="display:grid; grid-template-columns:40px 1fr 1fr 40px; font-size:11px; color:var(--text3); margin-bottom:8px; text-align:center;"><span>SET</span><span>KG</span><span>REPS</span><span>OK</span></div>`;
   state[id].rows.forEach((row, i) => {
     const div = document.createElement('div'); div.className = 'series-row';
@@ -245,7 +291,6 @@ function buildRows(id) {
   lucide.createIcons();
 }
 
-// PICKER LOGIC
 let activePicker = null;
 function populateWheels() {
     const wheelKg = document.getElementById('wheelKg'); const wheelReps = document.getElementById('wheelReps');
@@ -292,6 +337,7 @@ function switchNav(tab) {
     document.getElementById('mainTabs').style.display = tab === 'workout' ? 'flex' : 'none';
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     if(tab === 'workout') { switchDay(currentDayIdx); } else { document.getElementById(tab+'-view').classList.add('active'); if(tab === 'stats') buildStats(); if(tab === 'editor') renderEditor(); }
+    document.getElementById('mainScroll').scrollTop = 0;
 }
 
 function switchDay(d) {
@@ -300,7 +346,6 @@ function switchDay(d) {
     document.querySelectorAll('#workout-container .view').forEach((v, i) => v.classList.toggle('active', i === d));
 }
 
-// REKORDY
 function buildStats() {
     const content = document.getElementById('stats-content');
     let html = '';
@@ -345,11 +390,9 @@ function renderStatsChart(id) {
     });
 }
 
-// EDITOR - S MOŽNOSTÍ PŘIDÁVÁNÍ
 function renderEditor() {
     const cont = document.getElementById('editor-content');
     let html = '';
-    
     workoutPlan.forEach((day, dIdx) => {
         html += `
         <div class="editor-item" style="border-left: 4px solid var(--accent)">
@@ -379,22 +422,18 @@ function renderEditor() {
             <button class="btn-small btn-add-sub" style="margin-top:10px; background:var(--accent); color:#000" onclick="addSec(${dIdx})"><i data-lucide="layers" style="width:12px"></i> PŘIDAT SEKCI</button>
         </div>`;
     });
-    
     html += `<button class="btn-add" onclick="addDay()"><i data-lucide="calendar-plus" style="width:18px"></i> PŘIDAT NOVÝ DEN</button>`;
-    html += `<button class="btn-add" onclick="if(confirm('Opravdu smazat vše?')){localStorage.clear();location.reload()}" style="background:none; border:1px solid var(--danger); color:var(--danger); margin-top:10px;">RESET DO TOVÁRNÍHO NASTAVENÍ</button>`;
+    html += `<button class="btn-add" onclick="if(confirm('Reset?')){localStorage.clear();location.reload()}" style="background:none; border:1px solid var(--danger); color:var(--danger); margin-top:10px;">RESET DO TOVÁRNÍHO NASTAVENÍ</button>`;
     cont.innerHTML = html;
     lucide.createIcons();
 }
 
-// EDITOR ACTIONS
 function addDay() { workoutPlan.push({ id: Date.now(), label: "Nový Den", sections: [] }); saveAll(); renderEditor(); renderApp(); }
-function deleteDay(idx) { if(confirm('Smazat celý den?')) { workoutPlan.splice(idx, 1); if(currentDayIdx >= workoutPlan.length) currentDayIdx = 0; saveAll(); renderEditor(); renderApp(); } }
+function deleteDay(idx) { if(confirm('Smazat den?')) { workoutPlan.splice(idx, 1); if(currentDayIdx >= workoutPlan.length) currentDayIdx = 0; saveAll(); renderEditor(); renderApp(); } }
 function editDay(idx, val) { workoutPlan[idx].label = val; saveAll(); renderApp(); }
-
 function addSec(dIdx) { workoutPlan[dIdx].sections.push({ label: "NOVÁ SEKCE", exercises: [] }); saveAll(); renderEditor(); renderApp(); }
 function deleteSec(dIdx, sIdx) { workoutPlan[dIdx].sections.splice(sIdx, 1); saveAll(); renderEditor(); renderApp(); }
 function editSec(dIdx, sIdx, val) { workoutPlan[dIdx].sections[sIdx].label = val; saveAll(); renderApp(); }
-
 function addEx(dIdx, sIdx) { workoutPlan[dIdx].sections[sIdx].exercises.push({ id: 'ex_'+Date.now(), name: "Nový Cvik", sets: 3, reps: "10", video: "" }); saveAll(); renderEditor(); renderApp(); }
 function deleteEx(dIdx, sIdx, eIdx) { workoutPlan[dIdx].sections[sIdx].exercises.splice(eIdx, 1); saveAll(); renderEditor(); renderApp(); }
 function editEx(dIdx, sIdx, eIdx, field, val) { workoutPlan[dIdx].sections[sIdx].exercises[eIdx][field] = val; saveAll(); renderApp(); }
@@ -404,7 +443,6 @@ function setDate() {
     const n = new Date(); const d = ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota']; const m = ['ledna','února','března','dubna','května','června','července','srpna','září','října','listopadu','prosince']; 
     document.getElementById('headerDate').innerText = d[n.getDay()] + '\n' + n.getDate() + '. ' + m[n.getMonth()]; 
 }
-
 setDate();
 renderApp();
 </script>
